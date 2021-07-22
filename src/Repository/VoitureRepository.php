@@ -21,7 +21,8 @@ class VoitureRepository extends ServiceEntityRepository
         parent::__construct($registry, Voiture::class);
     }
 
-    public function findAllWithPagination(RechercheVoiture $rechercheVoiture) : Query{
+    public function findAllWithPagination(RechercheVoiture $rechercheVoiture) : Query
+    {
         $req = $this->createQueryBuilder('v');
         if($rechercheVoiture->getMinAnnee()){
             $req = $req->andWhere('v.annee >= :min')
@@ -32,6 +33,7 @@ class VoitureRepository extends ServiceEntityRepository
             ->setParameter(':max', $rechercheVoiture->getMaxAnnee());
         }
         return $req->getQuery();
+
     }
 
     // /**
