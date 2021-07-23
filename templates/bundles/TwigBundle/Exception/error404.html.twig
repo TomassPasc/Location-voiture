@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur 404{% endblock %}
+
+{% block monTitre %}La page n'existe pas{% endblock %}
+{% block body %}
+	<h2 class="text-center my-2 ">Erreur 404</h2>
+
+
+    <div class="d-flex justify-content-center my-2">
+        <a href="{{path('accueil')}}" class="btn btn-primary col-2 mx-2">Accueil</a>
+        <a href="{{path('voitures')}}" class="btn btn-primary col-2 mx-2">Liste des voitures</a>
+    </div>
+
+	<div class="text-center">
+		<img src="{{ asset('images/404.jpg') }}" class="img-thumbnail" alt="404">
+	</div>
+
+
+{% endblock %}

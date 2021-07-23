@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur 403{% endblock %}
+
+
+{% block body %}
+<h1 class="border border-dark rounded text-white m-2 p-2 text-center bg-danger"> Vous n'êtes pas autorisé à accèder à cette page{% endblock %}</h1>
+
+	<h2 class="text-center my-2 ">Erreur 403</h2>
+
+
+	<div class="d-flex justify-content-center my-2">
+		<a href="{{path('accueil')}}" class="btn btn-primary col-2 mx-2">Accueil</a>
+		<a href="{{path('app_login')}}" class="btn btn-primary col-2 mx-2">Connectez vous</a>
+	</div>
+
+	<div class="text-center">
+		<img src="{{ asset('images/403.jpg') }}" class="img-thumbnail" alt="404">
+	</div>
+
+
+{% endblock %}
