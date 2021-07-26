@@ -37,10 +37,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $password;
 
+
+
+    /**
+     * @ORM\OneToOne(targetEntity=Profile::class, inversedBy="user", cascade={"persist", "remove"})
+     */
+    private $profile;
+
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nom;
+    private $pseudo;
 
     public function getId(): ?int
     {
@@ -131,14 +138,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getNom(): ?string
+
+
+    public function getProfile(): ?Profile
     {
-        return $this->nom;
+        return $this->profile;
     }
 
-    public function setNom(string $nom): self
+    public function setProfile(?Profile $profile): self
     {
-        $this->nom = $nom;
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }
