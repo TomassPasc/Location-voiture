@@ -13,6 +13,7 @@ class ContactController extends AbstractController
     #[Route('/contact', name: 'contact')]
     public function send(Request $request, MailerService $mailer): Response
     {
+
         $email = $request->request->get('email');
         $sujet = $request->request->get('sujet');
         $message = $request->request->get('message');
@@ -23,7 +24,10 @@ class ContactController extends AbstractController
                 "thoma1@free.fr",
                 $sujet,
                 "contact/contenu.html.twig",
-                ["message" => $message]
+                [   
+                    "sujet" => $sujet,
+                    "message" => $message
+                    ]
             );
             $this->addFlash('success', "Votre mail a bien été envoyé");
             return $this->redirectToRoute('accueil');

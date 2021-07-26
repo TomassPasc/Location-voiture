@@ -1,2 +1,24 @@
-{{message}}
+<h1>{{sujet}} </h1>
+
+<p>{{message}}</p>
+
+
+
+<div style="border-top:1px dashed black;">
+    {% if app.user %}
+        <h2 > Informations utilisateur: </h2>
+        <p>id: {{ app.user.id }}</p>
+        <p>email:{{ app.user.email }}</p>
+        <p>nom: {{ app.user.nom }}</p>
+
+    {% else %}
+    <h2>
+        L'utilisateur a envoyé ce mail sans être connecté
+    </h2>
+    {% endif %}
+
+</div>
+
+
+
 
