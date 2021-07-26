@@ -17,7 +17,7 @@ class ContactController extends AbstractController
         $sujet = $request->request->get('sujet');
         $message = $request->request->get('message');
         $submit = $request->request->get('submit');
-        if ($submit == 'submit') {
+        if ($submit == 'envoyer') {
             $mailer->send(
                 $email,
                 "thoma1@free.fr",
@@ -25,6 +25,7 @@ class ContactController extends AbstractController
                 "contact/contenu.html.twig",
                 ["message" => $message]
             );
+            $this->addFlash('success', "Votre mail a bien été envoyé");
             return $this->redirectToRoute('accueil');
         }
         return $this->render('contact/formulaireContact.html.twig');
