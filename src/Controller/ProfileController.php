@@ -55,7 +55,7 @@ class ProfileController extends AbstractController
             $profile->setImageProfile($filename);
 
             $user->setProfile($profile);
-            $em->persist($user);
+           // $em->persist($user); pas besoin de persist quand modif
             $em->flush();
             return $this->redirectToRoute('profile');
         }

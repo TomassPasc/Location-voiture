@@ -9,13 +9,10 @@
     <h2>Vos informations </h2>
 
     {% if user.profile.ImageProfile %}
-<img src="/uploads/images/{{user.profile.ImageProfile}}" class="img-thumbnail" alt="photo user">
-
+        <img src="/uploads/images/{{user.profile.ImageProfile}}" class="img-thumbnail" alt="photo user">
     {% else %}
        <img src="{{ asset('images/anonyme.jpg') }}" class="img-thumbnail" alt="anonyme">
     {% endif %}
-
-
     <p><strong>username: {{user.pseudo}}</strong></p>
     <p><strong>email: {{user.email}}</strong></p>
     <p>nom: {{user.profile.nom}}</p>
