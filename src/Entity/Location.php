@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\LocationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LocationRepository::class)
@@ -29,11 +30,14 @@ class Location
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\GreaterThan("today UTC")
+     * @Assert\LessThanOrEqual(propertyPath="fin", message="doit être avant la date de fin")
      */
     private $debut;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\GreaterThanOrEqual(propertyPath="debut", message="doit être après la date de début")
      */
     private $fin;
 
