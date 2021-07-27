@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block monTitre %}Profile de {{user.pseudo}}{% endblock %}
+{% block body %}
+
+{% if (user.profile is not null)%}
+    <h2>Vos informations </h2>
+    <p><strong>username: {{user.pseudo}}</strong></p>
+    <p><strong>email: {{user.email}}</strong></p>
+    <p>nom: {{user.profile.nom}}</p>
+    <p>prenom: {{user.profile.prenom}}</p>
+    <p>âge: {{user.profile.age}}</p>
+    <p>ville: {{user.profile.ville}}</p>
+    <p>code postal: {{user.profile.CodePostal}}</p>
+    <a href="{{path('profile_edit',{'id' : user.profile.id})}}" class="col btn btn-info">Edit</a>
+
+
+{% else %}
+    <h2>Vous n'avez pas encore enregistré vos informations</h2>
+    <a href="{{path('profile_new')}}" class="col btn btn-info">Ajouter informations</a>
+
+{% endif %}
+
+    <h2>Mes réservations</h2>
+
+    <h2>Mes messages</h2>
+
+
+{% endblock %}
