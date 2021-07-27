@@ -47,6 +47,13 @@ class ProfileController extends AbstractController
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            //upload image
+            $file = $profile->getImageProfile();
+            $extension = explode(".", $file->getClientOriginalName());
+            $filename = md5(uniqid()) . '.' . end($extension);
+            $file->move($this->getParameter('upload_directory'), $filename);
+            $profile->setImageProfile($filename);
+
             $user->setProfile($profile);
             $em->persist($user);
             $em->flush();

@@ -117,15 +117,14 @@ class Profile
         return $this;
     }
 
-    public function getImageProfile(): ?string
+    public function getImageProfile()
     {
         return $this->image_profile;
     }
 
-    public function setImageProfile(?string $image_profile): self
+    public function setImageProfile($image_profile): self
     {
         $this->image_profile = $image_profile;
-
         return $this;
     }
 
