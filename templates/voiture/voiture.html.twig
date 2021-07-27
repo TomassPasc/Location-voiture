@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}voiture{% endblock %}
+
+{% block monTitre %}voiture{% endblock %}
+{% block body %}
+<img src="{{asset('images/' ~ voiture.modele.image)}}" class="card-img">
+
+{% endblock %}
+

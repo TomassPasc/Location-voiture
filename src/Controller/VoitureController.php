@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\RechercheVoiture;
+use App\Entity\Voiture;
 use App\Form\RechercheVoitureType;
 use App\Repository\VoitureRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -14,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class VoitureController extends AbstractController
 {
     #[Route('/client/voitures', name: 'voitures')]
-    public function index(VoitureRepository $repo, PaginatorInterface $paginatorInterface, Request $request): Response
+    public function afficherVoitures(VoitureRepository $repo, PaginatorInterface $paginatorInterface, Request $request): Response
     {
         $rechercheVoiture = new RechercheVoiture();
         $form = $this->createForm(RechercheVoitureType::class, $rechercheVoiture);
@@ -32,4 +33,13 @@ class VoitureController extends AbstractController
             'admin' => false
         ]);
     }
+    #[Route('/client/voiture/{id}', name: 'voiture')]
+    public function afficherVoiture(Voiture $voiture): Response
+    {
+
+        return $this->render('voiture/voiture.html.twig', [
+            'voiture' => $voiture,
+        ]);
+    }
+
 }

@@ -57,6 +57,12 @@
                             <input type="submit" class="btn btn-danger w-100" value="supprimer">
                         </form>
                     </div>
+                
+                {% else %}
+                    <div class="row m-1">
+                        <a href="{{path('voiture',{'id' : voiture.id})}}" class="col btn btn-info">Afficher</a>
+                        <a href="{{path('location',{'id' : voiture.id})}}" class="col btn btn-info">Réserver</a>
+                    </div>
                 {% endif %}
             </div>
         </div>
