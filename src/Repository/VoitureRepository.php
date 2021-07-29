@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\RechercheVoiture;
 use App\Entity\Voiture;
 use Doctrine\ORM\Query;
+use App\Entity\Location;
+use App\Entity\RechercheVoiture;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -35,6 +36,68 @@ class VoitureRepository extends ServiceEntityRepository
         return $req->getQuery();
 
     }
+
+    public function findByDateReservation(Location $location): Query
+    {
+        $req = $this->createQueryBuilder('v');
+        $sub = $req->join('v.locations','l')
+                    ->andWhere('l.debut > :debut')
+                    ->setParameter(':debut', $location->getDebut())
+                    ->andWhere('l.fin > :fin')
+                    ->setParameter(':fin', $location->getFin());
+
+        // $req = $this->createQueryBuilder('l');
+        // if ($location->getDebut()) {
+        //     $req = $req->andWhere('l.debut >= :debut')
+        //     ->setParameter(':debut', $location->getDebut());
+        // }
+        // if ($location->getFin()) {
+        //     $req = $req->andWhere('l.fin <= :fin')
+        //     ->setParameter(':fin', $location->getFin());
+        // }
+        // return $req->getQuery();
+    }
+    public function test(): Query
+    {
+        
+
+        $qb = $this->_em->createQueryBuilder();
+
+        $not = $qb
+        ->select('v')
+        ->from('App\Entity\Voiture', 'v')
+
+        ->addSelect('l')
+        ->join('v.locations', 'l')
+        ->andwhere('l.debut > :debut')
+        ->setParameter(':debut', '2021-12-01')
+        ->andwhere('l.fin < :fin')
+        ->setParameter(':fin', '2022-02-01')
+        ->getQuery()
+        ->getArrayResult();
+
+        $tab = [];
+         foreach($not as $v){
+             $tab[] = $v['id'];
+         }
+
+      $qb2 = $this->createQueryBuilder('v');
+        $req =  $qb2
+            ->select('v')
+            ->where($qb2->expr()->notIn('v.id', $tab))
+            ->getQuery()
+            ->getResult();
+        dd($req);
+
+        return $req;
+        
+
+
+
+
+    }
+
+
 
     // /**
     //  * @return Voiture[] Returns an array of Voiture objects

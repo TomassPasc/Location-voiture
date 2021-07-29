@@ -2,9 +2,13 @@
 
 {% block title %}voiture{% endblock %}
 
-{% block monTitre %}voiture{% endblock %}
+{% block monTitre %}voiture {{voiture.immatriculation}} {% endblock %}
+
 {% block body %}
 <img src="{{asset('images/' ~ voiture.modele.image)}}" class="card-img">
+
+<a href="{{path('location',{'id' : voiture.id})}}" class="btn btn-info mb-4">Réserver</a>
+
 
 {% endblock %}
 
