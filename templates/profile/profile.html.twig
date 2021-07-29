@@ -29,16 +29,37 @@
 
 {% endif %}
 
-<h2>Mes réservations ({{user.locations|length}})</h2>
 
-       {% for location in user.locations %}
-        <li>{{ location.debut |date("d/m/Y")}}</li>
-        <li>{{ location.fin |date("d/m/Y")}}</li>
-        <li>{{ location.voiture.immatriculation }}</li>
-        <li>{{ location.voiture.modele.libelle }}</li>
-        <li>{{ location.voiture.modele.marque.libelle }}</li>
-    {% endfor %}
-</ul>
+<div class="row mt-3">
+	<div class="col-6">
+
+        <h2>Mes réservations ({{user.locations|length}})</h2>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Modèle</th>
+                    <th scope="col">Marque</th>
+                    <th scope="col">Immatriculation</th>
+                    <th scope="col">Début location</th>
+                    <th scope="col">Fin location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for location in user.locations %}
+                    <tr class="table-info">
+                        <th scope="row">{{ location.voiture.modele.libelle }}</th>
+                        <td>{{ location.voiture.modele.marque.libelle }}</td>
+                        <td>{{ location.voiture.immatriculation }}</td>
+                        <td>{{ location.debut |date("d/m/Y")}}</td>
+                        <td>{{ location.fin |date("d/m/Y")}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
     <h2>Mes messages</h2>
 
