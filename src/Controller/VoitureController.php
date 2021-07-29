@@ -20,17 +20,19 @@ class VoitureController extends AbstractController
     #[Route('/client/voitures', name: 'voitures')]
     public function afficherVoitures(VoitureRepository $repoVoiture, LocationRepository $repoLocation, PaginatorInterface $paginatorInterface, Request $request): Response
     {
+       // dd($repoVoiture->findAll());
         //recherche voiture par année
         $rechercheVoiture = new RechercheVoiture();
         $form = $this->createForm(RechercheVoitureType::class, $rechercheVoiture);
         $form->handleRequest($request);
-        //dd($request);
+
         $voitures = $paginatorInterface->paginate(
             $repoVoiture->findAllWithPagination($rechercheVoiture),
             $request->query->getInt('page', 1), /*page number*/
             6 /*limit per page*/
         );
-        dd($voitures);
+      
+    
         
         //recherche voiture par disponibilité(non louée)
         $location = new Location();
@@ -38,10 +40,10 @@ class VoitureController extends AbstractController
         $formDateReservation->handleRequest($request);
         if ($formDateReservation->isSubmitted() && $formDateReservation->isValid()) {
             $voitures = $paginatorInterface->paginate(
-                $repoLocation->findByDateReservation($location),
+                $repoVoiture->findByTest($location),
                 $request->query->getInt('page', 1), /*page number*/
                 6 /*limit per page*/
-            );
+            ); 
     }   
         
      

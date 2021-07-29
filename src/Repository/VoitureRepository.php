@@ -37,48 +37,34 @@ class VoitureRepository extends ServiceEntityRepository
 
     }
 
-    public function findByDateReservation(Location $location): Query
+    public function findByTest(Location $location)
     {
-        $req = $this->createQueryBuilder('v');
-        $sub = $req->join('v.locations','l')
-                    ->andWhere('l.debut > :debut')
-                    ->setParameter(':debut', $location->getDebut())
-                    ->andWhere('l.fin > :fin')
-                    ->setParameter(':fin', $location->getFin());
-
-        // $req = $this->createQueryBuilder('l');
-        // if ($location->getDebut()) {
-        //     $req = $req->andWhere('l.debut >= :debut')
-        //     ->setParameter(':debut', $location->getDebut());
-        // }
-        // if ($location->getFin()) {
-        //     $req = $req->andWhere('l.fin <= :fin')
-        //     ->setParameter(':fin', $location->getFin());
-        // }
-        // return $req->getQuery();
-    }
-    public function test(): Query
-    {
-        
+//requete sql correspondante avec valur en dur
+//         SELECT * FROM `voiture` where `voiture`.id NOT IN (
+//             SELECT `voiture`.id FROM `voiture` join `location` 
+// 	           ON `voiture`.id = `location`.voiture_id
+//             WHERE `location`.`debut` > '2021-12-01' AND `location`.`fin` < '2022-02-01')
 
         $qb = $this->_em->createQueryBuilder();
-
         $not = $qb
         ->select('v')
         ->from('App\Entity\Voiture', 'v')
-
         ->addSelect('l')
         ->join('v.locations', 'l')
         ->andwhere('l.debut > :debut')
-        ->setParameter(':debut', '2021-12-01')
+        ->setParameter('debut', $location->getDebut())
         ->andwhere('l.fin < :fin')
-        ->setParameter(':fin', '2022-02-01')
+        ->setParameter('fin', $location->getFin())
         ->getQuery()
         ->getArrayResult();
-
+//dd($not);
         $tab = [];
          foreach($not as $v){
              $tab[] = $v['id'];
+         }
+        //si l'array est vide on retourne toutes les voitures
+         if (empty($tab)){
+             return $this->findAll();
          }
 
       $qb2 = $this->createQueryBuilder('v');
@@ -87,14 +73,10 @@ class VoitureRepository extends ServiceEntityRepository
             ->where($qb2->expr()->notIn('v.id', $tab))
             ->getQuery()
             ->getResult();
-        dd($req);
+    
 
         return $req;
         
-
-
-
-
     }
 
 
