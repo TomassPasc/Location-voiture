@@ -29,7 +29,16 @@
 
 {% endif %}
 
-    <h2>Mes réservations</h2>
+<h2>Mes réservations ({{user.locations|length}})</h2>
+
+       {% for location in user.locations %}
+        <li>{{ location.debut |date("d/m/Y")}}</li>
+        <li>{{ location.fin |date("d/m/Y")}}</li>
+        <li>{{ location.voiture.immatriculation }}</li>
+        <li>{{ location.voiture.modele.libelle }}</li>
+        <li>{{ location.voiture.modele.marque.libelle }}</li>
+    {% endfor %}
+</ul>
 
     <h2>Mes messages</h2>
 

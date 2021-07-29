@@ -14,7 +14,8 @@ class ProfileController extends AbstractController
 {
     #[Route('/client/profile', name: 'profile')]
     public function afficher(): Response
-    {
+    {   
+        //dd($this->getUser()->getLocations());
         return $this->render('profile/profile.html.twig', [
             'user' => $this->getUser()
         ]);
