@@ -61,9 +61,14 @@
                             <h5 class="card-title">{{voiture.immatriculation}}</h5>
                             <p class="card-text">
                                 <div>Marque : {{voiture.modele.marque.libelle}}</div>
-                                <div>Modele : {{voiture.modele.libelle}} - PM : {{voiture.modele.prixMoyen}}</div>
+                                <div>Modele : {{voiture.modele.libelle}}</div>
                                 <div>Nombre de porte : {{voiture.nbPortes}}</div>
                                 <div>Année : {{voiture.annee}}</div>
+                                {% if jours == 0%}
+                                    <div class="text-warning">Prix/jours : {{voiture.modele.prixMoyen}} €</div>
+                                {% else %}
+                                    <div class="text-info">Prix total : {{voiture.modele.prixMoyen * jours}} €</div>
+                                {% endif %}
                             </p>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Voiture;
 use App\Entity\Location;
 use App\Form\LocationType;
+use App\Service\CalculService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,19 +15,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class LocationController extends AbstractController
 {
     #[Route('/client/location/{id}', name: 'location')]
-    public function index(Voiture $voiture, Request $request, EntityManagerInterface $em): Response
+    public function index(Voiture $voiture, Request $request, EntityManagerInterface $em, CalculService $calculService): Response
     {
+        //$jours = 0;
         $user = $this->getUser(); 
         $location = new Location;
         $form = $this->createForm(LocationType::class, $location);
         $form->handleRequest($request);
 
-        //calcul nombre de jours à mettre dans un service
-        $debut = $form->get('debut')->getData();
-        $fin = $form->get('fin')->getData();
-        $jours = ($fin->diff($debut)->format("%a")) + 1;
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //calcul nombre de jours à mettre dans un service
+            $jours = $calculService->nombreJours($form->get('debut')->getData(), $form->get('fin')->getData());
             $location->setUser($user)
                     ->setVoiture($voiture)
                     ->setPrix($voiture->getModele()->getPrixMoyen() * $jours) //entre le prix total de la location

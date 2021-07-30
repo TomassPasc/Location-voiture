@@ -14,13 +14,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\LocationType;
 use App\Repository\LocationRepository;
+use App\Service\CalculService;
 
 class VoitureController extends AbstractController
 {
     #[Route('/client/voitures', name: 'voitures')]
-    public function afficherVoitures(VoitureRepository $repoVoiture, LocationRepository $repoLocation, PaginatorInterface $paginatorInterface, Request $request): Response
+    public function afficherVoitures(VoitureRepository $repoVoiture, LocationRepository $repoLocation, PaginatorInterface $paginatorInterface, Request $request, CalculService $calculService): Response
     {
-       // dd($repoVoiture->findAll());
+        $jours = 0;
         //recherche voiture par année
         $rechercheVoiture = new RechercheVoiture();
         $form = $this->createForm(RechercheVoitureType::class, $rechercheVoiture);
@@ -40,10 +41,11 @@ class VoitureController extends AbstractController
         $formDateReservation->handleRequest($request);
         if ($formDateReservation->isSubmitted() && $formDateReservation->isValid()) {
             $voitures = $paginatorInterface->paginate(
-                $repoVoiture->findByTest($location),
+                $repoVoiture->findByDisponibility($location),
                 $request->query->getInt('page', 1), /*page number*/
                 6 /*limit per page*/
-            ); 
+            );
+            $jours =$calculService->nombreJours($formDateReservation->get('debut')->getData(), $formDateReservation->get('fin')->getData());
     }   
         
      
@@ -51,7 +53,8 @@ class VoitureController extends AbstractController
             'voitures' => $voitures,
             'form' => $form->createView(),
             'formDateReservation' => $formDateReservation->createView(),
-            'admin' => false
+            'admin' => false,
+            'jours' => $jours
         ]);
     }
     #[Route('/client/voiture/{id}', name: 'voiture')]

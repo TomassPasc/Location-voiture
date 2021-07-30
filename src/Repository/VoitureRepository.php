@@ -37,7 +37,7 @@ class VoitureRepository extends ServiceEntityRepository
 
     }
 
-    public function findByTest(Location $location)
+    public function findByDisponibility(Location $location)
     {
 //requete sql correspondante avec valur en dur
 //         SELECT * FROM `voiture` where `voiture`.id NOT IN (
@@ -57,7 +57,6 @@ class VoitureRepository extends ServiceEntityRepository
         ->setParameter('fin', $location->getFin())
         ->getQuery()
         ->getArrayResult();
-//dd($not);
         $tab = [];
          foreach($not as $v){
              $tab[] = $v['id'];
