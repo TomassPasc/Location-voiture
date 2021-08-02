@@ -44,6 +44,7 @@
                     <th scope="col">Prix</th>
                     <th scope="col">Début location</th>
                     <th scope="col">Fin location</th>
+                    <th scope="col">Télécharger</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,6 +56,7 @@
                         <td>{{ (location.prix) ?  location.prix ~' €' : ''}}</td> {# affiche le prix si il en a un sinon affiche rien #}
                         <td>{{ location.debut |date("d/m/Y")}}</td>
                         <td>{{ location.fin |date("d/m/Y")}}</td>
+                        <td><a href={{ path('download', {'id': location.id} )}} class="btn btn-outline-info"><i class="fas fa-file-download"></i></a></td>
                     </tr>
                 {% endfor %}
             </tbody>

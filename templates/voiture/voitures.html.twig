@@ -26,23 +26,26 @@
 
 {{form_end(form)}}
 
-{{ form_start(formDateReservation, {'action': path('date_traitement'), 'method': 'POST'}) }}
-{# {{form_start(formDateReservation)}} #}
+{% if not admin %}
 
-<div class="row no-gutters align-items-center text-center">
-	<div class="col">
-		{{form_row(formDateReservation.debut)}}
-	</div>
-	<div class="col">
-		{{form_row(formDateReservation.fin)}}
-	</div>
-	<div class="col-2">
-		<input type="submit" value="rechercher" class="btn btn-info">
-	</div>
-</div>
+    {{ form_start(formDateReservation, {'action': path('date_traitement'), 'method': 'POST'}) }}
 
-{{form_end(formDateReservation)}}
 
+    <div class="row no-gutters align-items-center text-center">
+        <div class="col">
+            {{form_row(formDateReservation.debut)}}
+        </div>
+        <div class="col">
+            {{form_row(formDateReservation.fin)}}
+        </div>
+        <div class="col-2">
+            <input type="submit" value="rechercher" class="btn btn-info">
+        </div>
+    </div>
+
+    {{form_end(formDateReservation)}}
+
+{% endif %}
 
 {% if admin %}
 <a href="{{path('creationVoiture')}}" class="d-block btn btn-success">Ajouter</a>
