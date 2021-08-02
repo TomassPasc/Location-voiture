@@ -11,7 +11,6 @@
     </div>
 {% endfor %}
 
-
 {{form_start(form)}}
 <div class="row no-gutters align-items-center text-center">
 	<div class="col">
@@ -27,7 +26,8 @@
 
 {{form_end(form)}}
 
-{{form_start(formDateReservation)}}
+{{ form_start(formDateReservation, {'action': path('date_traitement'), 'method': 'POST'}) }}
+{# {{form_start(formDateReservation)}} #}
 
 <div class="row no-gutters align-items-center text-center">
 	<div class="col">
@@ -64,10 +64,10 @@
                                 <div>Modele : {{voiture.modele.libelle}}</div>
                                 <div>Nombre de porte : {{voiture.nbPortes}}</div>
                                 <div>Année : {{voiture.annee}}</div>
-                                {% if jours == 0%}
-                                    <div class="text-warning">Prix/jours : {{voiture.modele.prixMoyen}} €</div>
-                                {% else %}
-                                    <div class="text-info">Prix total : {{voiture.modele.prixMoyen * jours}} €</div>
+                                <div class="text-warning">Prix/jours : {{voiture.modele.prixMoyen}} €</div>
+                                {% if reservations.jours is defined %}
+                                    <div>Du {{ reservations.date_debut|date("d/m/Y")}} au {{ reservations.date_fin|date("d/m/Y")}}:</div>
+                                    <div class="text-info">Prix total : {{voiture.modele.prixMoyen * reservations.jours}} € </div>
                                 {% endif %}
                             </p>
                         </div>

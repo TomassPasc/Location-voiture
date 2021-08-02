@@ -41,6 +41,7 @@
                     <th scope="col">Modèle</th>
                     <th scope="col">Marque</th>
                     <th scope="col">Immatriculation</th>
+                    <th scope="col">Prix</th>
                     <th scope="col">Début location</th>
                     <th scope="col">Fin location</th>
                 </tr>
@@ -51,6 +52,7 @@
                         <th scope="row">{{ location.voiture.modele.libelle }}</th>
                         <td>{{ location.voiture.modele.marque.libelle }}</td>
                         <td>{{ location.voiture.immatriculation }}</td>
+                        <td>{{ (location.prix) ?  location.prix ~' €' : ''}}</td> {# affiche le prix si il en a un sinon affiche rien #}
                         <td>{{ location.debut |date("d/m/Y")}}</td>
                         <td>{{ location.fin |date("d/m/Y")}}</td>
                     </tr>
