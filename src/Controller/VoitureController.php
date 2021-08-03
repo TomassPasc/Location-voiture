@@ -87,4 +87,31 @@ class VoitureController extends AbstractController
         ]);
     }
 
+    #[Route('/test/{id}', name: 'test')]
+    public function test(Voiture $voiture, LocationRepository $repoLocation): Response
+    {
+        //on réccupère les locations que de la voiture choisi
+        //TODO: recuperer que les locations future
+        $locationsVoiture = $repoLocation->findBy(['voiture' => $voiture->getId()]);
+    
+        //parse les donnees en json pour les envoyer à la vue
+        $voitureLouee = [];
+        foreach($locationsVoiture as $loc){
+            $voitureLouee[] = [
+                'id' => $loc->getId(),
+                'start' => $loc->getDebut()->format('Y-m-d'), //reccupere la date au format texte
+                'end' => $loc->getFin()->format('Y-m-d'),
+                'title' => 'réservé',
+                'description' => 'description',
+                //'backgroundColor' => '#0000ff',
+                //'borderColor' => '#00ffff',
+                //'textColor' => '#00ffff',
+                //'allDay' => true
+            ];
+        }
+        $data = json_encode($voitureLouee);
+
+        return $this->render('voiture/test.html.twig', compact('data'));
+    }
+
 }
