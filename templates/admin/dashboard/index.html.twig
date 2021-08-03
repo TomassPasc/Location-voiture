@@ -71,7 +71,7 @@
 					</div>
 				</div>
 			</div>
-			{# <div class="col">
+			<div class="col">
 				<div class="card text-white bg-success mb-3 text-center">
 					<div class="card-body">
 						<div class="row">
@@ -86,75 +86,101 @@
 					</div>
 				</div>
 			</div>
-		</div> #}
-		{# <hr>
+		</div> 
+		<hr>
 		<div class="row">
 			<div class="col">
 				<div class="alert alert-success">
 					<h2 class="alert-heading my-3">
 						<i class="fas fa-arrow-up"></i>
-						Les annonces populaires</h2> #}
-{# 
+						Les reservations futures ({{locFuture|length}})</h2>
+
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>Annonce</th>
-								<th>Poprio</th>
-								<th>Moyenne</th>
+								<th>Voiture</th>
+								<th>Utilisateur</th>
+								<th>date début</th>
+								<th>date Fin</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for ad in bestAds %}
+							{% for loc in locFuture %}
 								<tr>
-									<td>{{ad.title}}</td>
+									<td>{{loc.voiture.immatriculation}}</td>
+									<td>{{loc.user.pseudo}}</td>
 									<td>
-										<img src="{{ad.picture}}" alt="" class="avatar avatar-micro">
-										{{ad.firstName}}
-										{{ad.lastName}}
+										{{loc.debut|date("d/m/Y")}}
 									</td>
-									<td class="text-center">
-										<span class="badge badge-dark">
-											{{ad.note | number_format(1, ",", " ")}}
-										</span>
+									<td >
+										{{loc.fin|date("d/m/Y")}}
 									</td>
 								</tr>
 							{% endfor %}
 						</tbody>
 					</table>
-				</div> #}
-			{# </div>
+				</div> 
+			</div>
 			<div class="col">
-				<div class="alert alert-danger">
+				<div class="alert alert-info">
 					<h2 class="alert-heading my-3">
-						<i class="fas fa-arrow-down"></i>
-						Les pires annonces</h2> #}
-
-					{# <table class="table table-hover">
+						<i class="fas fa-arrow-right"></i>
+						Les locations en cours({{locAct|length}})</h2>
+						<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>Annonce</th>
-								<th>Poprio</th>
-								<th>Moyenne</th>
+								<th>Voiture</th>
+								<th>Utilisateur</th>
+								<th>date début</th>
+								<th>date Fin</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for ad in worstAds %}
+							{% for loc in locAct %}
 								<tr>
-									<td>{{ad.title}}</td>
+									<td>{{loc.voiture.immatriculation}}</td>
+									<td>{{loc.user.pseudo}}</td>
 									<td>
-										<img src="{{ad.picture}}" alt="" class="avatar avatar-micro">
-										{{ad.firstName}}
-										{{ad.lastName}}
+										{{loc.debut|date("d/m/Y")}}
 									</td>
-									<td class="text-center">
-										<span class="badge badge-dark">
-											{{ad.note | number_format(1, ",", " ")}}
-										</span>
+									<td >
+										{{loc.fin|date("d/m/Y")}}
 									</td>
 								</tr>
 							{% endfor %}
 						</tbody>
-					</table> #}
+					</table>
+				</div>
+			</div>
+			<div class="col">
+				<div class="alert alert-danger">
+					<h2 class="alert-heading my-3">
+						<i class="fas fa-arrow-down"></i>
+						Les locations finies({{locPasse|length}})</h2>
+						<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Voiture</th>
+								<th>Utilisateur</th>
+								<th>date début</th>
+								<th>date Fin</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for loc in locPasse %}
+								<tr>
+									<td>{{loc.voiture.immatriculation}}</td>
+									<td>{{loc.user.pseudo}}</td>
+									<td>
+										{{loc.debut|date("d/m/Y")}}
+									</td>
+									<td >
+										{{loc.fin|date("d/m/Y")}}
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

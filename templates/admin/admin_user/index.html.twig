@@ -43,12 +43,12 @@
                             </a>
                             </div>
                             <div class="col-6">
-                            <form method="post" class="col" action="{{path('admin_user_supp',{'id':user.id})}}" onsubmit="return confirm('Voulez-vous vraiment supprimer ?');">
-                                <input type="hidden" name="_method" value="SUP">
-                                <input type="hidden" name="_token" value="{{csrf_token('SUP' ~ user.id)}}">
-                                <button type="submit" class="btn btn-danger" ><i class="fas fa-trash"></i></button>      
-                            </form>
-</div>
+                                <form method="post" class="col" action="{{path('admin_user_supp',{'id':user.id})}}" onsubmit="return confirm('Voulez-vous vraiment supprimer ?');">
+                                    <input type="hidden" name="_method" value="SUP">
+                                    <input type="hidden" name="_token" value="{{csrf_token('SUP' ~ user.id)}}">
+                                    <button type="submit" class="btn btn-danger" ><i class="fas fa-trash"></i></button>      
+                                </form>
+                            </div>
 
                             </div>
                         </td>
