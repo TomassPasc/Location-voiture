@@ -52,7 +52,7 @@ class AdminVoituresController extends AbstractController
             $this->addFlash('success', ($modif) ? "La modification a été effectuée" : "l'ajout a été effectué");
             return $this->redirectToRoute('admin');
         }
-        return $this->render('admin/modification.html.twig', [
+        return $this->render('admin/voiture/modification.html.twig', [
             'voiture' => $voiture,
             'form' => $form->createView(),
         ]);
@@ -70,12 +70,5 @@ class AdminVoituresController extends AbstractController
             return $this->redirectToRoute("admin");
         }
     }
-    #[Route('/admin/trest', name: 'test')]
-    public function test()
-    {
-        return $this->render('admin/test.html.twig', [
 
-        ]);
-
-    }
 }
