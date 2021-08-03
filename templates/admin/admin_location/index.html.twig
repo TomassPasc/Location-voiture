@@ -1,20 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminLocationController!{% endblock %}
+{% block title %}Administration location{% endblock %}
+{% block monTitre %}Administration des locations{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% for label, messages in app.flashes(['warning', 'success']) %}
+	{% for message in messages %}
+		<div class="alert alert-{{ label }}">
+			{{ message }}
+		</div>
+	{% endfor %}
+{% endfor %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<div class="container-fluid">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Utilisateur</th>
+				<th>Voiture</th>
+                <th>modèle</th>
+                <th>Prix</th>
+				<th>date de début</th>
+				<th>date de fin</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/thoma/Desktop/projet/voiture/src/Controller/AdminLocationController.php'|file_link(0) }}">src/Controller/AdminLocationController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/thoma/Desktop/projet/voiture/templates/admin_location/index.html.twig'|file_link(0) }}">templates/admin_location/index.html.twig</a></code></li>
-    </ul>
+		<tbody>
+			{% for location in locations %}
+				<tr>
+					<td>{{location.id}}</td>
+					<td>{{location.user.pseudo}}</td>
+					<td>{{location.voiture.immatriculation}}</td>
+                    <td>{{location.voiture.modele.libelle}}</td>
+                    <td>{{location.prix}}</td>
+                    <td>{{location.debut|date("d/m/Y")}}</td>
+                    <td>{{location.fin|date("d/m/Y")}}</td>
+					<td>
+                    <div class="row">
+						<div class="col-6">
+							<a href="{{ path('admin_location_edit', {'id': location.id}) }}" class="btn btn-primary">
+								<i class="fas fa-edit"></i>
+							</a>
+							</div>
+							<div class="col-6">
+								<form method="post" class="col" action="{{path('admin_location_supp',{'id':location.id})}}" onsubmit="return confirm('Voulez-vous vraiment supprimer ?');">
+									<input type="hidden" name="_method" value="SUP">
+									<input type="hidden" name="_token" value="{{csrf_token('SUP' ~ location.id)}}">
+									<button type="submit" class="btn btn-danger">
+										<i class="fas fa-trash"></i>
+									</button>
+								</form>
+							</div>
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 </div>
+
+
+ 
 {% endblock %}

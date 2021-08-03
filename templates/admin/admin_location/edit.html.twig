@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification de la location
+	{{location.id}}
+{% endblock %}
+
+{% block monTitre %}Modification de l'utilisateur
+	{{location.id}}
+{% endblock %}
+{% block body %}
+	{{form_start(form)}}
+	{{form_widget(form)}}
+	<input type="submit" value="valider" class="btn btn-success">
+	<a href="{{path('admin_location')}}" class="btn btn-primary">Retour</a>
+	{{form_end(form)}}
+
+{% endblock %}
+

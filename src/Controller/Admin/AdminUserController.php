@@ -49,7 +49,6 @@ class AdminUserController extends AbstractController
     public function supprimer(User $user, Request $request, EntityManagerInterface $em)
     {
         if (count($user->getLocations()) > 0) {
-           // dd('coucou');
             $this->addFlash(
                 'warning',
                 "Vous ne pouvez pas supprimer l'utilisateur {$user->getPseudo()} car il possède déjà des réservations !"
