@@ -50,7 +50,7 @@ class AdminVoituresController extends AbstractController
             $em->persist($voiture);
             $em->flush();
             $this->addFlash('success', ($modif) ? "La modification a été effectuée" : "l'ajout a été effectué");
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('admin_dashboard');
         }
         return $this->render('admin/voiture/modification.html.twig', [
             'voiture' => $voiture,
@@ -67,7 +67,7 @@ class AdminVoituresController extends AbstractController
             $em->remove($voiture);
             $em->flush();
             $this->addFlash('success', "La suppression a été effectué");
-            return $this->redirectToRoute("admin");
+            return $this->redirectToRoute("admin_dashboard");
         }
     }
 

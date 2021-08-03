@@ -1,20 +1,65 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminUserController!{% endblock %}
+{% block title %}AdminUtilisateurs{% endblock %}
+{% block monTitre %}Gestion des utilisateurs{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    {% for label, messages in app.flashes(['warning', 'success']) %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <div class="container-fluid">
+        
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th class="text-center">nombre réservations</th>
+                    <th class="text-center">rôle</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/thoma/Desktop/projet/voiture/src/Controller/AdminUserController.php'|file_link(0) }}">src/Controller/AdminUserController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/thoma/Desktop/projet/voiture/templates/admin_user/index.html.twig'|file_link(0) }}">templates/admin_user/index.html.twig</a></code></li>
-    </ul>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{user.id}}</td>
+                        <td>{{user.pseudo}}</td>
+                        <td>{{user.email}}</td>
+                        <td class="text-center">
+                            <span class="badge rounded-pill bg-info">{{user.locations | length}}</span>
+                        </td>
+                        <td class="text-center">{{user.roles|join(', ', ' et ')}}</td>
+                        <td>
+                            <div class="row">
+                            <div class="col-6">
+                            <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            </div>
+                            <div class="col-6">
+                            <form method="post" class="col" action="{{path('admin_user_supp',{'id':user.id})}}" onsubmit="return confirm('Voulez-vous vraiment supprimer ?');">
+                                <input type="hidden" name="_method" value="SUP">
+                                <input type="hidden" name="_token" value="{{csrf_token('SUP' ~ user.id)}}">
+                                <button type="submit" class="btn btn-danger" ><i class="fas fa-trash"></i></button>      
+                            </form>
 </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
 {% endblock %}

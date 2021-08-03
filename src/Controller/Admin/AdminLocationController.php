@@ -11,7 +11,7 @@ class AdminLocationController extends AbstractController
     #[Route('/admin/location', name: 'admin_location')]
     public function index(): Response
     {
-        return $this->render('admin_location/index.html.twig', [
+        return $this->render('admin/admin_location/index.html.twig', [
             'controller_name' => 'AdminLocationController',
         ]);
     }

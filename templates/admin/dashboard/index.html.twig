@@ -6,6 +6,12 @@
 
 {% block body %}
 
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success">
+			{{message}}
+		</div>
+	{% endfor %}
+
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col">
@@ -21,7 +27,7 @@
 						</div>
 						<div class="row">
 							<div class="col-6 offset-3">
-								<a class="btn btn-outline-info"  href="#">Administrer</a>
+								<a class="btn btn-outline-info"  href="{{path('admin_user')}}">Administrer</a>
 							</div>
 						</div>
 					</div>

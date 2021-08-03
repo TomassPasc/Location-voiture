@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification de l'utilisateur {{user.id}}{% endblock %}
+
+{% block monTitre %}Modification de l'utilisateur {{user.id}}{% endblock %}
+{% block body %}
+	{{form_start(form)}}
+	{{form_widget(form)}}
+	<input type="submit" value="valider" class="btn btn-success">
+	<a href="{{path('admin_user')}}" class="btn btn-primary">Retour</a>
+{{form_end(form)}}
+
+{% endblock %}
