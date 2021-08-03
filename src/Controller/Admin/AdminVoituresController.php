@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\Voiture;
 use App\Entity\RechercheVoiture;
@@ -14,9 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class AdminController extends AbstractController
+class AdminVoituresController extends AbstractController
 {
-    #[Route('/admin', name: 'admin')]
+    #[Route('/admin/voitures', name: 'admin_voitures')]
     public function index(VoitureRepository $repo, PaginatorInterface $paginatorInterface, Request $request): Response
     {
         $rechercheVoiture = new RechercheVoiture();
@@ -36,8 +36,8 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/creation', name: 'creationVoiture')]
-    #[Route('/admin/{id}', name: 'modifVoiture', methods: ['GET', 'POST'])]
+    #[Route('/admin/voiture/creation', name: 'creationVoiture')]
+    #[Route('/admin/voiture/modif/{id}', name: 'modifVoiture', methods: ['GET', 'POST'])]
     public function modification(Voiture $voiture = null, Request $request, EntityManagerInterface $em)    
     {
         if(!$voiture){
@@ -69,5 +69,13 @@ class AdminController extends AbstractController
             $this->addFlash('success', "La suppression a été effectué");
             return $this->redirectToRoute("admin");
         }
+    }
+    #[Route('/admin/trest', name: 'test')]
+    public function test()
+    {
+        return $this->render('admin/test.html.twig', [
+
+        ]);
+
     }
 }

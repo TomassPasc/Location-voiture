@@ -16,11 +16,18 @@ class UploadController extends AbstractController
     {
 
 
-      //  $img_path = 'http://127.0.0.1:8000/uploads/images/b843bfa9b2380dbad66b8264598d8095';
-        // $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
-        // $data = file_get_contents($img_path, false);
-        // $img_base_64 = base64_encode($data);
-        // $path_img = 'data:image/' . $extencion . ';base64,' . $img_base_64;
+        // $arrContextOptions=array(
+        //     "ssl"=>array(
+        //         "verify_peer"=>false,
+        //         "verify_peer_name"=>false,
+        //     ),
+        // );  
+
+    //    $img_path = 'http://127.0.0.1:8000/images/modele2';
+    //     $extencion = pathinfo($img_path, PATHINFO_EXTENSION);
+    //     $data = file_get_contents($img_path, false);
+    //     $img_base_64 = base64_encode($data);
+    //     $path_img = 'data:image/' . $extencion . ';base64,' . $img_base_64;
 
 
 
@@ -28,7 +35,7 @@ class UploadController extends AbstractController
             "upload/pdf.html.twig",
             [
                 'location' => $location,
-               // 'path_image' => $path_img
+              //  'path_image' => $path_img
             ],
             "reservation.pdf"
         );
