@@ -80,23 +80,19 @@ class VoitureController extends AbstractController
 
 
     #[Route('/client/voiture/{id}', name: 'voiture')]
-    public function afficherVoiture(Voiture $voiture): Response
+    public function afficherVoiture(Voiture $voiture, Request $request, LocationRepository $repoLocation): Response
     {
-        return $this->render('voiture/voiture.html.twig', [
-            'voiture' => $voiture,
-        ]);
-    }
+        //session pour afficher le prix total si il y a déjà une requête effectué
+        $session = $request->getSession();
+        $reservations = $session->get('reservations', []);
 
-    #[Route('/test/{id}', name: 'test')]
-    public function test(Voiture $voiture, LocationRepository $repoLocation): Response
-    {
         //on réccupère les locations que de la voiture choisi
         //TODO: recuperer que les locations future
         $locationsVoiture = $repoLocation->findBy(['voiture' => $voiture->getId()]);
-    
+
         //parse les donnees en json pour les envoyer à la vue
         $voitureLouee = [];
-        foreach($locationsVoiture as $loc){
+        foreach ($locationsVoiture as $loc) {
             $voitureLouee[] = [
                 'id' => $loc->getId(),
                 'start' => $loc->getDebut()->format('Y-m-d'), //reccupere la date au format texte
@@ -111,7 +107,11 @@ class VoitureController extends AbstractController
         }
         $data = json_encode($voitureLouee);
 
-        return $this->render('voiture/test.html.twig', compact('data'));
+        return $this->render('voiture/voiture.html.twig', [
+            'voiture' => $voiture,
+            'reservations' => $reservations,
+            'data' => $data
+        ]);
     }
 
 }

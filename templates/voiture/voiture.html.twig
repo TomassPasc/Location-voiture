@@ -1,14 +1,76 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}voiture{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css" integrity="sha256-FjyLCG3re1j4KofUTQQXmaWJw13Jdb7LQvXlkFxTDJI=" crossorigin="anonymous">
+{% endblock %}
+
 
 {% block monTitre %}voiture {{voiture.immatriculation}} {% endblock %}
 
 {% block body %}
-<img src="{{asset('images/' ~ voiture.modele.image)}}" class="card-img">
+    <div class="row">
+        <div class="col-4">
+            <img src="{{asset('images/' ~ voiture.modele.image)}}" class="img-thumbnail">
+        </div>
+        <div class="col-8">
+            <div class="card-body">
+                <h5 class="card-title">{{voiture.immatriculation}}</h5>
+                <p class="card-text">
+                    <div>Marque :
+                        {{voiture.modele.marque.libelle}}</div>
+                    <div>Modele :
+                        {{voiture.modele.libelle}}</div>
+                    <div>Nombre de porte :
+                        {{voiture.nbPortes}}</div>
+                    <div>Année :
+                        {{voiture.annee}}</div>
+                    <div class="text-warning">Prix/jours :
+                        {{voiture.modele.prixMoyen}}
+                        €</div>
+                    {% if reservations.jours is defined %}
+                        <div>Du
+                            {{ reservations.date_debut|date("d/m/Y")}}
+                            au
+                            {{ reservations.date_fin|date("d/m/Y")}}:</div>
+                        <div class="text-info">Prix total :
+                            {{voiture.modele.prixMoyen * reservations.jours}}
+                            €
+                        </div>
+                    {% endif %}
+                </p>
+                <a href="{{path('location',{'id' : voiture.id})}}" class="btn btn-info mb-4">Réserver</a>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <h2 class="m-2 p-2 text-center"> Calendrier des réservations </h2>
+    <div class="row">
+        <div class="col-10 offset-1">
+            <div id="calendrier"></div>
+        </div>
+    </div>
 
-<a href="{{path('location',{'id' : voiture.id})}}" class="btn btn-info mb-4">Réserver</a>
 
+{% endblock %}
 
+{% block javascripts %}
+	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.js" integrity="sha256-8nl2O4lMNahIAmUnxZprMxJIBiPv+SzhMuYwEuinVM0=" crossorigin="anonymous"></script>
+    <script>
+        window.onload = () => {
+            let calendarElt = document.querySelector("#calendrier");
+
+            let calendar = new FullCalendar.Calendar(calendarElt, {
+                initialView: 'dayGridMonth',
+                locale:'fr',
+                timeZone: 'Europe/Paris',
+                buttonText:{
+                    today:    'aujourd\'hui'
+                },
+                events: {{ data|raw }}
+                });
+                calendar.render();
+            }
+    </script>
 {% endblock %}
 

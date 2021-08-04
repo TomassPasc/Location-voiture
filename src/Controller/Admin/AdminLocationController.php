@@ -27,7 +27,7 @@ class AdminLocationController extends AbstractController
         $form = $this->createForm(AdminLocationType::class, $location);
 
         $form->handleRequest($request);
-
+        //TODO: check si il n'y a pas une voiture reserve dans ces dates si c'est le cas envoyer un message flash 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($location);
             $em->flush();

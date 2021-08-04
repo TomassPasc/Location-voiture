@@ -27,6 +27,8 @@ class LocationController extends AbstractController
         $location = new Location;
         $form = $this->createForm(ReservationType::class, $location);
         $form->handleRequest($request);
+
+        //TODO: reverifier si la voiture n'est pas reserve à ces dates. 
         
         if ($form->isSubmitted() && $form->isValid()) {
 
