@@ -5,11 +5,15 @@
 {% block monTitre %}Liste des voitures{% endblock %}
 {% block body %}
 
-{% for message in app.flashes('success') %}
-    <div class= "alert alert-success">
-        {{message}}
-    </div>
+{% for label, messages in app.flashes(['warning', 'success']) %}
+	{% for message in messages %}
+		<div class="alert alert-{{ label }}">
+			{{ message }}
+		</div>
+	{% endfor %}
 {% endfor %}
+
+
 
 {{form_start(form)}}
 <div class="row no-gutters align-items-center text-center">

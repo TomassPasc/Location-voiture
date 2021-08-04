@@ -39,11 +39,15 @@ class VoitureRepository extends ServiceEntityRepository
 
     public function findByDisponibility(Location $location)
     {
-//requete sql correspondante avec valur en dur
+        // selectionnne les voitures dispo  
+//requete sql correspondante avec valur en dur 2021-12-01 <  voiture dispo   < 2022-02-1
+
+//  
 //         SELECT * FROM `voiture` where `voiture`.id NOT IN (
-//             SELECT `voiture`.id FROM `voiture` join `location` 
-// 	           ON `voiture`.id = `location`.voiture_id
-//             WHERE `location`.`debut` > '2021-12-01' AND `location`.`fin` < '2022-02-01')
+//             SELECT `voiture`.id FROM `voiture`, `location`
+//             WHERE `voiture`.id = `location`.voiture_id AND 
+//                   `location`.`debut` > '2021-12-01' AND 
+//                    `location`.`fin` < '2022-02-01')
 
         $qb = $this->_em->createQueryBuilder();
         $not = $qb
@@ -73,9 +77,48 @@ class VoitureRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     
+        return $req;
+    }
+
+    public function findByDisponibilityForOneCar($debut, $fin)
+    {
+        //requete sql correspondante avec valur en dur
+        //         SELECT * FROM `voiture` where `voiture`.id NOT IN (
+        //             SELECT `voiture`.id FROM `voiture` join `location` 
+        // 	           ON `voiture`.id = `location`.voiture_id
+        //             WHERE `location`.`debut` > '2021-12-01' AND `location`.`fin` < '2022-02-01')
+
+        $qb = $this->_em->createQueryBuilder();
+        $not = $qb
+            ->select('v')
+            ->from('App\Entity\Voiture', 'v')
+            ->addSelect('l')
+            ->join('v.locations', 'l')
+            ->where("(l.debut > 2021-08-15 OR l.fin > 2021-08-15) AND (l.debut < 2021-08-16 OR l.fin < 2021-08-16)")
+            ->getQuery()
+            ->getArrayResult();
+
+        
+
+        $tab = [];
+        foreach ($not as $v) {
+            $tab[] = $v;
+        }
+        dd($tab);
+        //si l'array est vide on retourne toutes les voitures
+        if (empty($tab)) {
+            echo 'good';
+            return ;
+        }
+
+        $qb2 = $this->createQueryBuilder('v');
+        $req =  $qb2
+            ->select('v')
+            ->where($qb2->expr()->notIn('v.id', $tab))
+            ->getQuery()
+            ->getResult();
 
         return $req;
-        
     }
 
 
