@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Profile;
 use App\Form\ProfileType;
 use App\Repository\LocationRepository;
+use App\Service\CalendarService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,24 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProfileController extends AbstractController
 {
     #[Route('/client/profile', name: 'profile')]
-    public function afficher(LocationRepository $repoLocation): Response
+    public function afficher(LocationRepository $repoLocation, CalendarService $calendarService): Response
     {
         $locationsVoiture = $repoLocation->findBy(['user' => $this->getUser()]);
-        $voitureLouee = [];
-        foreach ($locationsVoiture as $loc) {
-            $voitureLouee[] = [
-                'id' => $loc->getId(),
-                'start' => $loc->getDebut()->format('Y-m-d'), //reccupere la date au format texte
-                'end' => $loc->getFin()->format('Y-m-d'),
-                'title' => 'réservé',
-                'description' => 'description',
-                //'backgroundColor' => '#0000ff',
-                //'borderColor' => '#00ffff',
-                //'textColor' => '#00ffff',
-                //'allDay' => true
-            ];
-        }
-        $data = json_encode($voitureLouee);
+        //on parse pour envoyer les données au calendrier
+        $data = $calendarService->parseData($locationsVoiture, true); //true pour afficher le nom du modèle dans le calendrier et non le mot réservé
 
         return $this->render('profile/profile.html.twig', [
             'user' => $this->getUser(),

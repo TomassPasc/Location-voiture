@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\LocationType;
 use App\Repository\LocationRepository;
 use App\Service\CalculService;
+use App\Service\CalendarService;
 
 class VoitureController extends AbstractController
 {
@@ -80,7 +81,7 @@ class VoitureController extends AbstractController
 
 
     #[Route('/client/voiture/{id}', name: 'voiture')]
-    public function afficherVoiture(Voiture $voiture, Request $request, LocationRepository $repoLocation): Response
+    public function afficherVoiture(Voiture $voiture, Request $request, LocationRepository $repoLocation, CalendarService $calendarService): Response
     {
         //session pour afficher le prix total si il y a déjà une requête effectué
         $session = $request->getSession();
@@ -90,23 +91,9 @@ class VoitureController extends AbstractController
         //TODO: recuperer que les locations future
         $locationsVoiture = $repoLocation->findBy(['voiture' => $voiture->getId()]);
 
-        //parse les donnees en json pour les envoyer à la vue
-        $voitureLouee = [];
-        foreach ($locationsVoiture as $loc) {
-            $voitureLouee[] = [
-                'id' => $loc->getId(),
-                'start' => $loc->getDebut()->format('Y-m-d'), //reccupere la date au format texte
-                'end' => $loc->getFin()->format('Y-m-d'),
-                'title' => 'réservé',
-                'description' => 'description',
-                //'backgroundColor' => '#0000ff',
-                //'borderColor' => '#00ffff',
-                //'textColor' => '#00ffff',
-                //'allDay' => true
-            ];
-        }
-        $data = json_encode($voitureLouee);
-
+        //on parse les données en json pour les transmettre au calendrier
+        $data = $calendarService->parseData($locationsVoiture);
+        
         return $this->render('voiture/voiture.html.twig', [
             'voiture' => $voiture,
             'reservations' => $reservations,
