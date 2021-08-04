@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Location;
 use App\Form\AdminLocationType;
 use App\Repository\LocationRepository;
+use App\Service\CalendarService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,10 +15,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminLocationController extends AbstractController
 {
     #[Route('/admin/location', name: 'admin_location')]
-    public function index(LocationRepository $repo): Response
+    public function index(LocationRepository $repo, CalendarService $calendarService): Response
     {
+        $locations = $repo->findAll();
+        $data = $calendarService->parseData($locations, true);
         return $this->render('admin/admin_location/index.html.twig', [
-            'locations' => $repo->findAll(),
+            'locations' => $locations,
+            'data' => $data
+
         ]);
     }
 

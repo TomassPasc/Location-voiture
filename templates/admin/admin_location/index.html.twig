@@ -1,66 +1,101 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Administration location{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css" integrity="sha256-FjyLCG3re1j4KofUTQQXmaWJw13Jdb7LQvXlkFxTDJI=" crossorigin="anonymous">
+{% endblock %}
+
+
 {% block monTitre %}Administration des locations{% endblock %}
 
 {% block body %}
-{% for label, messages in app.flashes(['warning', 'success']) %}
-	{% for message in messages %}
-		<div class="alert alert-{{ label }}">
-			{{ message }}
-		</div>
-	{% endfor %}
-{% endfor %}
+    {% for label, messages in app.flashes(['warning', 'success']) %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <h2 class=" m-2 p-2 text-center">Liste des réservations</h2>
+    <div class="row">
+        <div class="col-10 offset-1">
+            <div class="container-fluid">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Utilisateur</th>
+                            <th>Voiture</th>
+                            <th>modèle</th>
+                            <th>Prix</th>
+                            <th>date de début</th>
+                            <th>date de fin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
 
-<div class="container-fluid">
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Utilisateur</th>
-				<th>Voiture</th>
-                <th>modèle</th>
-                <th>Prix</th>
-				<th>date de début</th>
-				<th>date de fin</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-
-		<tbody>
-			{% for location in locations %}
-				<tr>
-					<td>{{location.id}}</td>
-					<td>{{location.user.pseudo}}</td>
-					<td>{{location.voiture.immatriculation}}</td>
-                    <td>{{location.voiture.modele.libelle}}</td>
-                    <td>{{location.prix}}</td>
-                    <td>{{location.debut|date("d/m/Y")}}</td>
-                    <td>{{location.fin|date("d/m/Y")}}</td>
-					<td>
-                    <div class="row">
-						<div class="col-6">
-							<a href="{{ path('admin_location_edit', {'id': location.id}) }}" class="btn btn-primary">
-								<i class="fas fa-edit"></i>
-							</a>
-							</div>
-							<div class="col-6">
-								<form method="post" class="col" action="{{path('admin_location_supp',{'id':location.id})}}" onsubmit="return confirm('Voulez-vous vraiment supprimer ?');">
-									<input type="hidden" name="_method" value="SUP">
-									<input type="hidden" name="_token" value="{{csrf_token('SUP' ~ location.id)}}">
-									<button type="submit" class="btn btn-danger">
-										<i class="fas fa-trash"></i>
-									</button>
-								</form>
-							</div>
-						</div>
-					</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-</div>
+                    <tbody>
+                        {% for location in locations %}
+                            <tr>
+                                <td>{{location.id}}</td>
+                                <td>{{location.user.pseudo}}</td>
+                                <td>{{location.voiture.immatriculation}}</td>
+                                <td>{{location.voiture.modele.libelle}}</td>
+                                <td>{{location.prix}}</td>
+                                <td>{{location.debut|date("d/m/Y")}}</td>
+                                <td>{{location.fin|date("d/m/Y")}}</td>
+                                <td>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <a href="{{ path('admin_location_edit', {'id': location.id}) }}" class="btn btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        </div>
+                                        <div class="col-6">
+                                            <form method="post" class="col" action="{{path('admin_location_supp',{'id':location.id})}}" onsubmit="return confirm('Voulez-vous vraiment supprimer ?');">
+                                                <input type="hidden" name="_method" value="SUP">
+                                                <input type="hidden" name="_token" value="{{csrf_token('SUP' ~ location.id)}}">
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <h2 class=" m-2 p-2 text-center">Calendrier</h2>
+    <div class="row">
+        <div class="col-8 offset-2">
+            <div id="calendrier"></div>
+        </div>
+    </div>
 
 
- 
+{% endblock %}
+
+{% block javascripts %}
+	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.js" integrity="sha256-8nl2O4lMNahIAmUnxZprMxJIBiPv+SzhMuYwEuinVM0=" crossorigin="anonymous"></script>
+    <script>
+        window.onload = () => {
+            let calendarElt = document.querySelector("#calendrier");
+
+            let calendar = new FullCalendar.Calendar(calendarElt, {
+                initialView: 'dayGridMonth',
+                locale:'fr',
+                timeZone: 'Europe/Paris',
+                buttonText:{
+                    today:    'aujourd\'hui'
+                },
+                events: {{ data|raw }}
+                });
+                calendar.render();
+            }
+    </script>
 {% endblock %}
