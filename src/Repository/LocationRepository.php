@@ -21,7 +21,7 @@ class LocationRepository extends ServiceEntityRepository
         parent::__construct($registry, Location::class);
     }
 
-    public function findByDisponibilityForOneCar($debut, $fin, $voitureId)
+    public function findByDisponibilityForOneCar($debut, $fin, $voitureId, $edit = false, $locationId = null)
     {
 
         $queryBuilder = $this->createQueryBuilder('l')
@@ -31,12 +31,25 @@ class LocationRepository extends ServiceEntityRepository
         ->setParameter('voitId', $voitureId)
         ->getQuery()
         ->getArrayResult();
-        //si l'array est vide la voiture est dispo sinon elle ne l'est pas.
-        if(count($queryBuilder) == 0){
-            return true;
-        } else{
-            return false;
-        };
+       
+        //partie edit on doit prendre en compte la location actuelle qui va etre modif
+        if($edit){
+            
+            if((count($queryBuilder) == 1 && $queryBuilder[0]['id'] == $locationId) || (count($queryBuilder) == 0)){
+                return true;
+            } else {
+                return false;
+            }
+
+
+        } else { 
+            //si ce n'est pas une edition on verifie juste si l'array est vide alors la voiture est dispo sinon elle ne l'est pas.
+            if(count($queryBuilder) == 0){
+                return true;
+            } else{
+                return false;
+            };
+        }
         
         //requete sql correspondante avec valur en dur
         //         SELECT * FROM `voiture` where `voiture`.id NOT IN (

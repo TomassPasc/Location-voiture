@@ -24,12 +24,8 @@ class VoitureController extends AbstractController
     {
         $session = $request->getSession();
         $reservations = $session->get('reservations', []);
-        //$reservations['jours'] = 0;
+
         $session->set('reservations', $reservations);
-        //dd($session->get('reservations'));
-        // $jours = 0;
-       // $jours = $request->query->get('jours');
-        //dd($jours);
         //recherche voiture par année
         $rechercheVoiture = new RechercheVoiture();
         $form = $this->createForm(RechercheVoitureType::class, $rechercheVoiture);
@@ -76,7 +72,7 @@ class VoitureController extends AbstractController
         $reservations['date_fin'] = $formDateReservation->get('fin')->getData();
         $session->set('reservations', $reservations);
        // dd($session->get('reservations'));
-        return $this->redirectToRoute( 'voitures');;
+        return $this->redirectToRoute( 'voitures');
     }
 
 

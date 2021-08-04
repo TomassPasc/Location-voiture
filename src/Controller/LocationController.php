@@ -28,10 +28,9 @@ class LocationController extends AbstractController
         $location = new Location;
         $form = $this->createForm(ReservationType::class, $location);
         $form->handleRequest($request);
-
+     
         //verifie si la voiture n'est pas reserve à ces dates. 
         $voitureDispo = $repoLocation->findByDisponibilityForOneCar($reservations['date_debut'], $reservations['date_fin'], $voiture->getId());
-       
         if(!$voitureDispo){
             $this->addFlash('warning', "Cette voiture n'est plus disponible veuillez faire une nouvelle recherche");
             return $this->redirectToRoute('voitures');

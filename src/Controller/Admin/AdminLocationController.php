@@ -27,20 +27,26 @@ class AdminLocationController extends AbstractController
     }
 
     #[Route('/admin/location/{id}/edit', name: 'admin_location_edit')]
-    public function edit(Location $location, Request $request, EntityManagerInterface $em)
+    public function edit(Location $location, Request $request, EntityManagerInterface $em, LocationRepository $repoLocation)
     {
         $form = $this->createForm(AdminLocationType::class, $location);
 
         $form->handleRequest($request);
-        //TODO: check si il n'y a pas une voiture reserve dans ces dates si c'est le cas envoyer un message flash 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($location);
-            $em->flush();
+            //verifie si la voiture n'est pas reserve à ces dates. 
+            $voitureDispo = $repoLocation->findByDisponibilityForOneCar($location->getDebut(), $location->getFin(), $location->getVoiture(), true, $location->getId());
+            if (!$voitureDispo) {
+                $this->addFlash('warning', "Cette voiture n'est pas disponible pour ces dates (réservation num {$location->getId()})");
+            }
+            else{
+                $em->persist($location);
+                $em->flush();
+                $this->addFlash(
+                    'success',
+                    "La location {$location->getId()} a bien été modifié !"
+                );
+            }
 
-            $this->addFlash(
-                'success',
-                "La location {$location->getId()} a bien été modifié !"
-            );
             return $this->redirectToRoute('admin_location');
         }
         return $this->render('admin/admin_location/edit.html.twig', [
