@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\LocationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Trait\StripeTrait;
+use App\Repository\LocationRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -11,6 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Location
 {
+
+    use StripeTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
