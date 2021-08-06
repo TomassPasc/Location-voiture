@@ -59,6 +59,7 @@ class StripeManager
        // $location->setFin($reservations['date_fin']);
         $location->setDebut($session['date_debut']);
         $location->setFin($session['date_fin']);
+        $location->setDateCreation(new \Datetime());
         $location->setBrandStripe($resource['stripeBrand']);
         $location->setLast4Stripe($resource['stripeLast4']);
         $location->setIdChargeStripe($resource['stripeId']);

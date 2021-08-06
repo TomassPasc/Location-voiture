@@ -40,7 +40,7 @@ class StripeService
         if (isset($stripeParameter['stripeIntentId'])){
              $payment_intent =$stripe->paymentIntents->retrieve($stripeParameter['stripeIntentId']);
         }
-        if($stripeParameter['stripeIntentId'] === 'succeeded'){
+        if($stripeParameter['stripeIntentStatus'] === 'succeeded'){
             //TODO:declencher un listener par exemple
         } else {
             $payment_intent->cancel();
