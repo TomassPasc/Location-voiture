@@ -20,12 +20,12 @@ class StripeService
         }
     }
     //associe le prix de la reservation à une clé
-    public function paymentIntent(Voiture $voiture)
+    public function paymentIntent(Voiture $voiture, $prix)
     {
         $stripe = new StripeClient($this->privateKey);
 
         return $stripe->paymentIntents->create([
-            'amount' => $voiture->getModele()->getPrixMoyen() * 100,
+            'amount' => $prix * 100,
             'currency' => 'eur',
             'payment_method_types' => ['card'],
         ]);
@@ -48,10 +48,10 @@ class StripeService
         return $payment_intent;
     }
 
-    public function stripe(array $stripeParameter, Voiture $voiture)
+    public function stripe(array $stripeParameter, Voiture $voiture, $prix)
     {
         return $this->paiement(
-            $voiture->getModele()->getPrixMoyen() * 100,
+            $prix * 100,
             'eur',
             $voiture->getImmatriculation(),
             $stripeParameter

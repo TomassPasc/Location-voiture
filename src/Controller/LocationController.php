@@ -6,10 +6,10 @@ use App\Entity\Voiture;
 use App\Entity\Location;
 use App\Form\LocationType;
 use App\Form\ReservationType;
-use App\Repository\LocationRepository;
+use App\Manager\StripeManager;
 use App\Service\CalculService;
 use App\Service\MailerService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\LocationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,64 +17,72 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class LocationController extends AbstractController
 {
-    #[Route('/client/location/{id}', name: 'location')]
-    public function index(Voiture $voiture, Request $request, EntityManagerInterface $em, CalculService $calculService, MailerService $mailer, LocationRepository $repoLocation): Response
+    #[Route('/client/location/{id}/show', name: 'location', methods:['GET','POST'])]
+    public function index(Voiture $voiture, Request $request, LocationRepository $repoLocation, StripeManager $stripeManager): Response
     {
-         $session = $request->getSession();
-         $reservations = $session->get('reservations');
-  
-        $user = $this->getUser(); 
-   
-        $location = new Location;
-        $form = $this->createForm(ReservationType::class, $location);
-        $form->handleRequest($request);
-     
+        $session = $request->getSession()->get('reservations');
+        $nbreJours = $session['jours'];
+        $dateDebut = $session['date_debut'];
+        $dateFin = $session['date_fin'];
+        $prix = $voiture->getModele()->getPrixMoyen() * $nbreJours;
+
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('login');
+        }
+
         //verifie si la voiture n'est pas reserve à ces dates. 
-        $voitureDispo = $repoLocation->findByDisponibilityForOneCar($reservations['date_debut'], $reservations['date_fin'], $voiture->getId());
+        $voitureDispo = $repoLocation->findByDisponibilityForOneCar($dateDebut, $dateFin, $voiture->getId());
         if(!$voitureDispo){
             $this->addFlash('warning', "Cette voiture n'est plus disponible veuillez faire une nouvelle recherche");
             return $this->redirectToRoute('voitures');
         }
-        else{
-            if ($form->isSubmitted() && $form->isValid()) {
 
-                //calcul avec le service:
-                $jours = $calculService->nombreJours($reservations['date_debut'], $reservations['date_fin']);
+        return $this->render('location/payment.html.twig', [
+            'user' => $this->getUser(),
+            'intentSecret' => $stripeManager->intentSecret($voiture, $prix),
+            'voiture' => $voiture,
+            'jours' => $nbreJours,
+            'prix' => $prix
+        ]);
+    }
 
-                //on ajoute toutes les données nécessaire pour la location
-                $location->setUser($user)
-                    ->setVoiture($voiture)
-                    ->setDebut($reservations['date_debut'])
-                    ->setFin($reservations['date_fin'])
-                    ->setPrix($voiture->getModele()->getPrixMoyen() * $jours) //entre le prix total de la location
-                    ->setDateCreation(new \DateTime()); //on set l'user actuel et la voiture choisit qu'on a recuppéré grâce à l'id de la voiture.
+    #[Route('/client/subscription/{id}/paiement/load', name: 'subscriptions_paiement', methods: ['GET', 'POST'])]
+    public function subscription(Voiture $voiture, Request $request, StripeManager $stripeManager, MailerService $mailer)
+    {
+        $user = $this->getUser();
 
-                $em->persist($location);
-                $em->flush();
+        $session = $request->getSession();
+        $reservations = $session->get('reservations');
+        $nbreJours = $reservations['jours'];
+        $dateDebut = $reservations['date_debut'];
+        $dateFin = $reservations['date_fin'];
+        $prix = $voiture->getModele()->getPrixMoyen() * $nbreJours;
 
-                //message pour le retour à la page principal
-                $this->addFlash('success', "Votre réservation a bien été effectué");
+        if ($request->getMethod() === "POST") {
+            $resource = $stripeManager->stripe($_POST, $voiture, $prix);
 
+            if (null !== $resource) {
+                $stripeManager->create_subscription($resource, $voiture, $user, $reservations);
 
+                //envoie mail
                 $mailer->send(
-                    "thoma1@free.fr",
+                    "tho1@free.fr",
                     $user->getEmail(),
                     'votre réservation de location',
                     "location/mail.html.twig",
-                    [
-                        'location' => $location
-                    ]
+                    ['voiture' => $voiture,
+                     'user' => $user,
+                     'prix' => $prix,
+                     'dateDebut' => $dateDebut,
+                     'dateFin' => $dateFin]
                 );
 
-
-                return $this->redirectToRoute('voitures');
+                return $this->render('location/response.html.twig', [
+                    'voiture' => $voiture,
+                    'prix' => $prix
+                ]);
             }
         }
-
-        return $this->render('location/index.html.twig', [
-            'form' => $form->createView(),
-            'reservations' => $reservations,
-            'voiture' => $voiture
-        ]);
+        return $this->redirectToRoute('payment', ['id' => $voiture->getId()]);
     }
 }

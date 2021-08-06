@@ -48,7 +48,7 @@ test
 			<div class="row">
 				<div class="col">
 					<div class="card-body">
-						<form action="{{ path("subscription_paiement", {'id': voiture.id }) }}" method="post" id="payment-form">
+						<form action="{{ path("subscriptions_paiement", {'id': voiture.id }) }}" method="post" id="payment-form">
 							<div class="form-row">
 								<div id="card-elements"></div>
 
@@ -57,8 +57,8 @@ test
 								<div id="card-errors" role="alert"></div>
 							</div>
 							<button class="btn btn-primary mt-4">
-								Acheter
-								{{ voiture.modele.prixMoyen }} €
+								Payé
+								{{ prix }} €
 							</button>
 						</form>
 					</div>
@@ -134,12 +134,12 @@ test
             }
         ).then((result) => {
             if (result.error) {
-                 // Display error
-                 
+                 //TODO: Display error
+
             } else if ('paymentIntent' in result) {
-                console.log('Result : ', result);
+             //   console.log('Result : ', result);
                 stripeTokenHandler(result.paymentIntent);
-                console.log('Result paymentIntent : ', result.paymentIntent);
+               // console.log('Result paymentIntent : ', result.paymentIntent);
             }
         })
     });

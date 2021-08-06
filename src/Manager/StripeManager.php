@@ -20,17 +20,17 @@ class StripeManager
         $this->stripeService = $stripeService;
     }
 
-    public function intentSecret(Voiture $voiture)
+    public function intentSecret(Voiture $voiture, $prix)
     {
-        $intent = $this->stripeService->paymentIntent($voiture);
+        $intent = $this->stripeService->paymentIntent($voiture, $prix);
 
         return $intent['client_secret'] ?? null; //quand c'est bon il retourne un client secret sinon il retourne null
     }
 
-    public function stripe( array $stripeParameter, Voiture $voiture)
+    public function stripe( array $stripeParameter, Voiture $voiture, $prix)
     {
         $ressource = null;
-        $data = $this->stripeService->stripe($stripeParameter, $voiture);
+        $data = $this->stripeService->stripe($stripeParameter, $voiture, $prix);
 
         if($data){
             $ressource = [
@@ -54,9 +54,7 @@ class StripeManager
         $location = new Location();
         $location->setUser($user);
         $location->setVoiture($voiture);
-        $location->setPrix($voiture->getModele()->getPrixMoyen());
-        //$location->setDebut($reservations['date_debut']);
-       // $location->setFin($reservations['date_fin']);
+        $location->setPrix($voiture->getModele()->getPrixMoyen() * $session['jours']);
         $location->setDebut($session['date_debut']);
         $location->setFin($session['date_fin']);
         $location->setDateCreation(new \Datetime());
@@ -67,6 +65,7 @@ class StripeManager
         $location->setStatusStripe($resource['stripeStatus']);
         $this->em->persist($location);
         $this->em->flush();
+        
     }
 
         

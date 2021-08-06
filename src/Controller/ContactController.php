@@ -30,7 +30,7 @@ class ContactController extends AbstractController
                     ]
             );
             $this->addFlash('success', "Votre mail a bien été envoyé");
-            return $this->redirectToRoute('accueil');
+            return $this->redirectToRoute('voitures');
         }
         return $this->render('contact/formulaireContact.html.twig');
     }
