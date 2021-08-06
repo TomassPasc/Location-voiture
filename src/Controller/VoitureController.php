@@ -76,7 +76,7 @@ class VoitureController extends AbstractController
     }
 
 
-    #[Route('/client/voiture/{id}', name: 'voiture')]
+    #[Route('/client/voiture/{id}/show', name: 'voiture')]
     public function afficherVoiture(Voiture $voiture, Request $request, LocationRepository $repoLocation, CalendarService $calendarService): Response
     {
         //session pour afficher le prix total si il y a déjà une requête effectué

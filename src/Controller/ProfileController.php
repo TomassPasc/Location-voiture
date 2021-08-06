@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Profile;
+use App\Entity\Location;
 use App\Form\ProfileType;
-use App\Repository\LocationRepository;
 use App\Service\CalendarService;
+use App\Repository\LocationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,28 +84,5 @@ class ProfileController extends AbstractController
     }
 
 
-    
 
-
-    // #[Route('/admin/creation', name: 'creationVoiture')]
-    // #[Route('/admin/{id}', name: 'modifVoiture', methods: ['GET', 'POST'])]
-    // public function modification(Voiture $voiture = null, Request $request, EntityManagerInterface $em)
-    // {
-    //     if (!$voiture) {
-    //         $voiture = new Voiture();
-    //     }
-    //     $form = $this->createForm(VoitureType::class, $voiture);
-    //     $form->handleRequest($request);
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $modif = $voiture->getId() !== null;
-    //         $em->persist($voiture);
-    //         $em->flush();
-    //         $this->addFlash('success', ($modif) ? "La modification a été effectuée" : "l'ajout a été effectué");
-    //         return $this->redirectToRoute('admin');
-    //     }
-    //     return $this->render('admin/modification.html.twig', [
-    //         'voiture' => $voiture,
-    //         'form' => $form->createView(),
-    //     ]);
-    // }
 }

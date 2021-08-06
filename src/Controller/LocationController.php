@@ -17,8 +17,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class LocationController extends AbstractController
 {
-    #[Route('/client/location/{id}/show', name: 'location', methods:['GET','POST'])]
-    public function index(Voiture $voiture, Request $request, LocationRepository $repoLocation, StripeManager $stripeManager): Response
+    #[Route('/client/location/{id}/payment', name: 'location', methods:['GET','POST'])]
+    public function payment(Voiture $voiture, Request $request, LocationRepository $repoLocation, StripeManager $stripeManager): Response
     {
         $session = $request->getSession()->get('reservations');
         $nbreJours = $session['jours'];
@@ -84,5 +84,20 @@ class LocationController extends AbstractController
             }
         }
         return $this->redirectToRoute('payment', ['id' => $voiture->getId()]);
+    }
+
+    #[Route('/client/location/{id}/show', name: 'location_show')]
+    public function afficherVoiture(Location $location, CalculService $calculJour): Response
+    {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('login');
+        }
+        $jours = $calculJour->nombreJours($location->getDebut(), $location->getFin());
+       
+
+        return $this->render('location/show.html.twig', [
+            'location' => $location,
+            'jours' => $jours
+        ]);
     }
 }
