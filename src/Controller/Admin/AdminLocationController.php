@@ -6,6 +6,7 @@ use App\Entity\Location;
 use App\Form\AdminLocationType;
 use App\Repository\LocationRepository;
 use App\Service\CalendarService;
+use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,9 +57,10 @@ class AdminLocationController extends AbstractController
     }
 
     #[Route('/admin/location/{id}/supp', name: 'admin_location_supp')]
-    public function supprimer(Location $location, Request $request, EntityManagerInterface $em)
+    public function supprimer(Location $location, Request $request, EntityManagerInterface $em, StripeService $stripeService)
     {
         if ($this->isCsrfTokenValid("SUP" . $location->getId(), $request->get("_token"))) {
+            $stripeService->paymentRefund($location);
             $em->remove($location);
             $em->flush();
             $this->addFlash('success', "La suppression a été effectué");

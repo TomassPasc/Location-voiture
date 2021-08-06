@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}Paiement réussi{% endblock %}
+{% block monTitre %}Paiment Réussi{% endblock %}
 {% block body %}
 	<!--Main layout-->
 	<main class="pt-5 mx-lg-5">
@@ -55,7 +56,8 @@
 					</div>
 				</div>
 			</div>
-
+			<div class='text-center'>
+			<a href="{{path('voitures')}}" class="col btn btn-primary">Retour à la page d'accueil</a></div>
 		</div>
 	</main>
 {% endblock %}

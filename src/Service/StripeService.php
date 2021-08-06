@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Location;
 use Stripe\Stripe;
 use App\Entity\Voiture;
 use Stripe\StripeClient;
@@ -57,4 +58,20 @@ class StripeService
             $stripeParameter
         );
     }
+
+
+    public function paymentRefund(Location $location)
+    {
+        $stripe = new StripeClient($this->privateKey);
+
+        return $stripe->refunds->create(
+            [
+                'charge' => $location->getIdChargeStripe(),
+                'amount' => $location->getPrix() * 50
+            ]
+            );
+        
+    }
+
+
 }
