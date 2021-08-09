@@ -9,7 +9,9 @@ use App\Form\ReservationType;
 use App\Manager\StripeManager;
 use App\Service\CalculService;
 use App\Service\MailerService;
+use App\Service\StripeService;
 use App\Repository\LocationRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -99,5 +101,19 @@ class LocationController extends AbstractController
             'location' => $location,
             'jours' => $jours
         ]);
+    }
+
+    #[Route('/client/location/{id}/supp', name: 'client_location_supp')]
+    public function supprimer(Location $location, Request $request, EntityManagerInterface $em, StripeService $stripeService)
+    {
+        if ($this->isCsrfTokenValid("SUP" . $location->getId(), $request->get("_token"))) {
+            $stripeService->paymentRefund($location);
+            $em->remove($location);
+            $em->flush();
+            $this->addFlash('success', "La suppression a été effectué");
+        }
+
+
+        return $this->redirectToRoute("voitures");
     }
 }

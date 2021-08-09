@@ -53,7 +53,7 @@
                         <th scope="col">Fin location</th>
                         <th scope="col">Télécharger</th>
                         <th scope="col">Voir</th>
-                        
+                        <th scope="col">Supprimer</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,8 +65,17 @@
                             <td>{{ (location.prix) ?  location.prix ~' €' : ''}}</td> {# affiche le prix si il en a un sinon affiche rien #}
                             <td>{{ location.debut |date("d/m/Y")}}</td>
                             <td>{{ location.fin |date("d/m/Y")}}</td>
-                            <td class='text-center'><a href={{ path('download', {'id': location.id} )}} class="btn btn-outline-info"><i class="fas fa-file-download"></i></a></td>
-                            <td class='text-center'><a href={{ path('location_show', {'id': location.id} )}} class="btn btn-outline-info"><i class="far fa-eye"></i></a></td>
+                            <td class='text-center'><a href={{ path('download', {'id': location.id} )}} class="btn btn-outline-primary"><i class="fas fa-file-download"></i></a></td>
+                            <td class='text-center'><a href={{ path('location_show', {'id': location.id} )}} class="btn btn-outline-primary"><i class="far fa-eye"></i></a></td>
+                            <td class="text-center">
+                                <form method="post" class="col" action="{{path('client_location_supp',{'id':location.id})}}" onsubmit="return confirm('Voulez-vous vraiment supprimer ?');">
+                                    <input type="hidden" name="_method" value="SUP">
+                                    <input type="hidden" name="_token" value="{{csrf_token('SUP' ~ location.id)}}">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </tr>
                     {% endfor %}
                 </tbody>
