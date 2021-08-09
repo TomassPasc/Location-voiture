@@ -11,6 +11,7 @@ use App\Service\CalculService;
 use App\Service\MailerService;
 use App\Service\StripeService;
 use App\Repository\LocationRepository;
+use App\Service\AnnulationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -104,10 +105,13 @@ class LocationController extends AbstractController
     }
 
     #[Route('/client/location/{id}/supp', name: 'client_location_supp')]
-    public function supprimer(Location $location, Request $request, EntityManagerInterface $em, StripeService $stripeService)
+    public function supprimer(Location $location, Request $request, EntityManagerInterface $em, StripeService $stripeService, AnnulationService $annulation)
     {
         if ($this->isCsrfTokenValid("SUP" . $location->getId(), $request->get("_token"))) {
             $stripeService->paymentRefund($location);
+            //injecter dans la table annulation
+            $annulation->injectionBdd($location, $em);
+
             $em->remove($location);
             $em->flush();
             $this->addFlash('success', "La suppression a été effectué");

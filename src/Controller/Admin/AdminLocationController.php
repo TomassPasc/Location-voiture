@@ -2,10 +2,10 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Annulation;
 use App\Entity\Location;
 use App\Form\AdminLocationType;
 use App\Repository\LocationRepository;
+use App\Service\AnnulationService;
 use App\Service\CalendarService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -58,26 +58,15 @@ class AdminLocationController extends AbstractController
     }
 
     #[Route('/admin/location/{id}/supp', name: 'admin_location_supp')]
-    public function supprimer(Location $location, Request $request, EntityManagerInterface $em, StripeService $stripeService)
+    public function supprimer(Location $location, Request $request, EntityManagerInterface $em, StripeService $stripeService, AnnulationService $annulation)
     {
         if ($this->isCsrfTokenValid("SUP" . $location->getId(), $request->get("_token"))) {
             $stripeService->paymentRefund($location);
 
             //injecter dans la table annulation
-            $annnulation = new Annulation();
-            $annnulation->setNumReservation($location->getId());
-            $annnulation->setUser($location->getUser()->getId());
-            $annnulation->setVoiture($location->getVoiture()->getId());
-            $annnulation->setDebut($location->getDebut());
-            $annnulation->setFin($location->getFin());
-            $annnulation->setDateAnnulation(new \Datetime());
-            $annnulation->setPrix($location->getPrix());
-            $annnulation->setStripeToken($location->getStripeToken());
-            $annnulation->setIdChargeStripe($location->getIdChargeStripe());
-            $em->persist($annnulation);
-            $em->flush();
+            $annulation->injectionBdd($location, $em);
 
-            //fin
+            //supprime la location
             $em->remove($location);
             $em->flush();
             $this->addFlash('success', "La suppression a été effectué");
