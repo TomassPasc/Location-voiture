@@ -9,6 +9,7 @@ class CalendarService
 
 
     public function parseData($locationsVoiture, $titleVoiture = false){
+        $voitureLouee = [];
         //gère le titre si on veut le mot 'réservé' ou le modèle de la voiture
         if ($titleVoiture == true){
             foreach ($locationsVoiture as $loc) {

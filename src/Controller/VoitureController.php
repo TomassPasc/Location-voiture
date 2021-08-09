@@ -19,7 +19,7 @@ use App\Service\CalendarService;
 
 class VoitureController extends AbstractController
 {
-    #[Route('/client/voitures', name: 'voitures')]
+    #[Route('/', name: 'voitures')]
     public function afficherVoitures(VoitureRepository $repoVoiture, LocationRepository $repoLocation, PaginatorInterface $paginatorInterface, Request $request, CalculService $calculService): Response
     {
         $session = $request->getSession();

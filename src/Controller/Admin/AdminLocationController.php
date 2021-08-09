@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Annulation;
 use App\Entity\Location;
 use App\Form\AdminLocationType;
 use App\Repository\LocationRepository;
@@ -61,6 +62,22 @@ class AdminLocationController extends AbstractController
     {
         if ($this->isCsrfTokenValid("SUP" . $location->getId(), $request->get("_token"))) {
             $stripeService->paymentRefund($location);
+
+            //injecter dans la table annulation
+            $annnulation = new Annulation();
+            $annnulation->setNumReservation($location->getId());
+            $annnulation->setUser($location->getUser()->getId());
+            $annnulation->setVoiture($location->getVoiture()->getId());
+            $annnulation->setDebut($location->getDebut());
+            $annnulation->setFin($location->getFin());
+            $annnulation->setDateAnnulation(new \Datetime());
+            $annnulation->setPrix($location->getPrix());
+            $annnulation->setStripeToken($location->getStripeToken());
+            $annnulation->setIdChargeStripe($location->getIdChargeStripe());
+            $em->persist($annnulation);
+            $em->flush();
+
+            //fin
             $em->remove($location);
             $em->flush();
             $this->addFlash('success', "La suppression a été effectué");
