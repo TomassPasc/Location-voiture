@@ -108,14 +108,20 @@ class LocationController extends AbstractController
     public function supprimer(Location $location, Request $request, EntityManagerInterface $em, StripeManager $stripeManager, AnnulationService $annulation, CalculService $calculService)
     {
         if ($this->isCsrfTokenValid("SUP" . $location->getId(), $request->get("_token"))) {
-            $stripeManager->paymentRefund($location, $calculService);
-            //injecter dans la table annulation 
-            $annulation->injectionBdd($location, $em);
-            $em->remove($location);
-            $em->flush();
-            $this->addFlash('success', "La suppression a été effectué");
-        }
+            $refund =$stripeManager->paymentRefund($location, $calculService);
+            if($refund){
+                //injecter dans la table annulation 
+                $annulation->injectionBdd($location, $em);
+                $em->remove($location);
+                $em->flush();
+                $this->addFlash('success', "La suppression a été effectué");
+            }
+            else{
+                $this->addFlash('warning', "Vous ne pouvez pas supprimer une réservervation qui a déjà commencée ou qui est fini");
+                return $this->redirectToRoute("profile");
 
+            }
+        }
         return $this->redirectToRoute("voitures");
     }
 }

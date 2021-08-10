@@ -6,8 +6,18 @@
 {% endblock %}
 
 
+
+
 {% block monTitre %}Profile de {{user.pseudo}}{% endblock %}
 {% block body %}
+
+{% for label, messages in app.flashes(['warning', 'success']) %}
+	{% for message in messages %}
+		<div class="alert alert-{{ label }}">
+			{{ message }}
+		</div>
+	{% endfor %}
+{% endfor %}
 
     <div class="row">
         {% if (user.profile is not null)%}

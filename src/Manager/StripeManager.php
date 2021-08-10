@@ -77,17 +77,19 @@ class StripeManager
     
         //si la reservation tenter d'être annulé après la date de début de la reservation
         if ($dateDebut  <= new \Datetime()) {
-            //TODO: ne pas annuler renvoyer vers une page peut être condition d'utilisation
-            dd('coucou');
+            return false;
         //si la reservation est annulée avant 30 jours remboursement 70%
         } else if ($joursAvtReservation > 30) {
             $this->stripeService->paymentRefund($location, 70);
+            return true;
             //si la reservation est annulée avant 7 jours remboursement 50%
         } else if ($joursAvtReservation > 7) {
             $this->stripeService->paymentRefund($location, 50);
+            return true;
             //si la reservation est annulée dans les 7 derniers jours remboursement 20%
         } else {
             $this->stripeService->paymentRefund($location, 20);
+            return true;
         }
     }
 
