@@ -4,8 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Entity\Location;
 use App\Form\AdminLocationType;
+use App\Manager\StripeManager;
 use App\Repository\LocationRepository;
 use App\Service\AnnulationService;
+use App\Service\CalculService;
 use App\Service\CalendarService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -58,10 +60,10 @@ class AdminLocationController extends AbstractController
     }
 
     #[Route('/admin/location/{id}/supp', name: 'admin_location_supp')]
-    public function supprimer(Location $location, Request $request, EntityManagerInterface $em, StripeService $stripeService, AnnulationService $annulation)
+    public function supprimer(Location $location, Request $request, EntityManagerInterface $em, StripeManager $stripeManager, AnnulationService $annulation, CalculService $calculService)
     {
         if ($this->isCsrfTokenValid("SUP" . $location->getId(), $request->get("_token"))) {
-            $stripeService->paymentRefund($location);
+            $stripeManager->paymentRefund($location, $calculService);
 
             //injecter dans la table annulation
             $annulation->injectionBdd($location, $em);

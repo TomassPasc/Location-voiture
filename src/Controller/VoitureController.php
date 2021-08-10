@@ -13,9 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\LocationType;
+use App\Manager\StripeManager;
 use App\Repository\LocationRepository;
 use App\Service\CalculService;
 use App\Service\CalendarService;
+use App\Service\StripeService;
 
 class VoitureController extends AbstractController
 {
@@ -71,7 +73,6 @@ class VoitureController extends AbstractController
         $reservations['date_debut'] = $formDateReservation->get('debut')->getData();
         $reservations['date_fin'] = $formDateReservation->get('fin')->getData();
         $session->set('reservations', $reservations);
-       // dd($session->get('reservations'));
         return $this->redirectToRoute( 'voitures');
     }
 
@@ -96,5 +97,14 @@ class VoitureController extends AbstractController
             'data' => $data
         ]);
     }
+
+    #[Route('/test/{id}', name: 'test')]
+    public function test(Location $location, StripeManager $stripeService, CalculService $calculService){
+        $stripeService->paymentRefund($location, $calculService);
+        return $this->render('voiture/test.html.twig', [
+        ]);
+
+    }
+
 
 }

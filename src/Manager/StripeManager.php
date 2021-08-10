@@ -5,6 +5,7 @@ namespace App\Manager;
 use App\Entity\User;
 use App\Entity\Voiture;
 use App\Entity\Location;
+use App\Service\CalculService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -66,6 +67,28 @@ class StripeManager
         $this->em->persist($location);
         $this->em->flush();
         
+    }
+
+    public function paymentRefund(Location $location, CalculService $calculService){
+        $dateDebut = $location->getDebut();
+
+        //calacul le nombre de jours avant la reservation
+        $joursAvtReservation = $calculService->nombreJours($dateDebut, new \Datetime());
+    
+        //si la reservation tenter d'être annulé après la date de début de la reservation
+        if ($dateDebut  <= new \Datetime()) {
+            //TODO: ne pas annuler renvoyer vers une page peut être condition d'utilisation
+            dd('coucou');
+        //si la reservation est annulée avant 30 jours remboursement 70%
+        } else if ($joursAvtReservation > 30) {
+            $this->stripeService->paymentRefund($location, 70);
+            //si la reservation est annulée avant 7 jours remboursement 50%
+        } else if ($joursAvtReservation > 7) {
+            $this->stripeService->paymentRefund($location, 50);
+            //si la reservation est annulée dans les 7 derniers jours remboursement 20%
+        } else {
+            $this->stripeService->paymentRefund($location, 20);
+        }
     }
 
         

@@ -60,18 +60,16 @@ class StripeService
     }
 
 
-    public function paymentRefund(Location $location)
+    public function paymentRefund(Location $location, $pourcentage)
     {
         $stripe = new StripeClient($this->privateKey);
-
         return $stripe->refunds->create(
             [
                 'charge' => $location->getIdChargeStripe(),
-                'amount' => $location->getPrix() * 50
+                'amount' => $location->getPrix() * $pourcentage
             ]
             );
         
     }
-
 
 }

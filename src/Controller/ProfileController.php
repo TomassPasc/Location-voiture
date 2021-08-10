@@ -57,7 +57,7 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/client/profile/{id}', name: 'profile_edit')]
+    #[Route('/client/profile/{id}/edit', name: 'profile_edit')]
     public function modification(Profile $profile, Request $request, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();

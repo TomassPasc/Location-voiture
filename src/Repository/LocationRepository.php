@@ -40,8 +40,6 @@ class LocationRepository extends ServiceEntityRepository
             } else {
                 return false;
             }
-
-
         } else { 
             //si ce n'est pas une edition on verifie juste si l'array est vide alors la voiture est dispo sinon elle ne l'est pas.
             if(count($queryBuilder) == 0){
