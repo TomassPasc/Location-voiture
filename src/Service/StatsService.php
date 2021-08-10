@@ -18,7 +18,7 @@ class StatsService
         $users      = $this->getUsersCount();
         $voitures        = $this->getVoituresCount();
         $locations   = $this->getLocationsCount();
-        //$comments   = $this->getCommentsCount();
+    
 
         return compact('users', 'voitures', 'locations');
     }

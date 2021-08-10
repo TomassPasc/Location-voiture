@@ -48,45 +48,31 @@ class LocationRepository extends ServiceEntityRepository
                 return false;
             };
         }
-        
-        //requete sql correspondante avec valur en dur
-        //         SELECT * FROM `voiture` where `voiture`.id NOT IN (
-        //             SELECT `voiture`.id FROM `voiture` join `location` 
-        // 	           ON `voiture`.id = `location`.voiture_id
-        //             WHERE `location`.`debut` > '2021-12-01' AND `location`.`fin` < '2022-02-01')
 
-        // $qb = $this->_em->createQueryBuilder();
-        // $not = $qb
-        //     ->select('v')
-        //     ->from('App\Entity\Voiture', 'v')
-        //     ->addSelect('l')
-        //     ->join('v.locations', 'l')
-        //     ->where("(l.debut > 2021-08-15 OR l.fin > 2021-08-15) AND (l.debut < 2021-08-16 OR l.fin < 2021-08-16)")
-        //     ->getQuery()
-        //     ->getArrayResult();
-
-
-
-        // $tab = [];
-        // foreach ($not as $v) {
-        //     $tab[] = $v;
-        // }
-        // dd($tab);
-        // //si l'array est vide on retourne toutes les voitures
-        // if (empty($tab)) {
-        //     echo 'good';
-        //     return;
-        // }
-
-        // $qb2 = $this->createQueryBuilder('v');
-        // $req =  $qb2
-        //     ->select('v')
-        //     ->where($qb2->expr()->notIn('v.id', $tab))
-        //     ->getQuery()
-        //     ->getResult();
-
-        // return $req;
     }
+
+    public function findByCarRentId($debut, $fin)
+    {
+        //querybuilder stocke les locations pendant les dates chercher
+        $queryBuilder = $this->createQueryBuilder('l')
+            ->join('l.voiture', 'v')
+            ->addSelect('v')
+            ->where('v.id = v')
+            ->andwhere("((l.debut > :debut) OR (l.fin > :debut)) AND ((l.debut < :fin) OR (l.fin < :fin))")
+            ->setParameter('debut', $debut)
+            ->setParameter('fin', $fin)
+            ->getQuery()
+            ->getArrayResult();
+
+        //on transforme le querybuilder en tableau avec les ids des voitures louees pendant ces dates
+        // ex de retour ['3', '5', '6']
+        $voituresLoueesId = [];
+        foreach ($queryBuilder as $v) {
+            $voituresLoueesId[] = $v['voiture']['id'];
+        }
+        return $voituresLoueesId;
+        }
+
 
     // /**
     //  * @return Location[] Returns an array of Location objects
