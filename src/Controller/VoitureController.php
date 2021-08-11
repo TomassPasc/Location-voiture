@@ -50,7 +50,7 @@ class VoitureController extends AbstractController
         ]);
     }
 
-    #[Route('/client/voitures/form', name: 'date_traitement')]
+    #[Route('/client/voitures/form', name: 'date_traitement_voitures')]
     public function formTraitement(CalculService $calculService,  PaginatorInterface $paginatorInterface, VoitureRepository $repoVoiture, Request $request): Response
     {    
         $session = $request->getSession();
@@ -63,7 +63,7 @@ class VoitureController extends AbstractController
         $reservations['date_debut'] = $formDateReservation->get('debut')->getData();
         $reservations['date_fin'] = $formDateReservation->get('fin')->getData();
         $session->set('reservations', $reservations);
-        return $this->redirectToRoute( 'voitures');
+            return $this->redirectToRoute( 'voitures');
     }
 
 
@@ -74,8 +74,11 @@ class VoitureController extends AbstractController
         $session = $request->getSession();
         $reservations = $session->get('reservations', []);
 
+        //recherche voiture par disponibilité(non louée)
+        $location = new Location();
+        $formDateReservation = $this->createForm(LocationType::class, $location);
+
         //on réccupère les locations que de la voiture choisi
-        //TODO: recuperer que les locations future
         $locationsVoiture = $repoLocation->findBy(['voiture' => $voiture->getId()]);
 
         //on parse les données en json pour les transmettre au calendrier
@@ -83,6 +86,7 @@ class VoitureController extends AbstractController
         
         return $this->render('voiture/voiture.html.twig', [
             'voiture' => $voiture,
+            'formDateReservation' => $formDateReservation->createView(),
             'reservations' => $reservations,
             'data' => $data
         ]);
