@@ -33,7 +33,7 @@
 {% endif %}
 
 {% if admin %}
-<a href="{{path('creationVoiture')}}" class="d-block btn btn-success">Ajouter</a>
+<a href="{{path('creation_voiture')}}" class="d-block btn btn-success">Ajouter</a>
 
 {% endif %}
 <div class="row no-gutters">
@@ -63,8 +63,8 @@
                 </div>
                 {% if admin %}
                     <div class="row m-1">
-                        <a href="{{path('modifVoiture',{'id' : voiture.id})}}" class="col btn btn-warning">Modifier</a>
-                        <form method="post" class="col" action="{{path('supVoiture',{'id':voiture.id})}}" onsubmit="return confirm('Voulez-vous vraiment supprimer ?');">
+                        <a href="{{path('modif_voiture',{'id' : voiture.id})}}" class="col btn btn-warning">Modifier</a>
+                        <form method="post" class="col" action="{{path('sup_voiture',{'id':voiture.id})}}" onsubmit="return confirm('Voulez-vous vraiment supprimer ?');">
                             <input type="hidden" name="_method" value="SUP">
                             <input type="hidden" name="_token" value="{{csrf_token('SUP' ~ voiture.id)}}">
                             <input type="submit" class="btn btn-danger w-100" value="supprimer">

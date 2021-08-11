@@ -73,7 +73,6 @@ class AdminLocationController extends AbstractController
             $em->flush();
             $this->addFlash('success', "La suppression a été effectué");
         }
-        
 
         return $this->redirectToRoute("admin_location");
     }

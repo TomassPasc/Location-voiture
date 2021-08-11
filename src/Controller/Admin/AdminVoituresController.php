@@ -36,8 +36,8 @@ class AdminVoituresController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/voiture/creation', name: 'creationVoiture')]
-    #[Route('/admin/voiture/modif/{id}', name: 'modifVoiture', methods: ['GET', 'POST'])]
+    #[Route('/admin/voiture/creation', name: 'creation_voiture')]
+    #[Route('/admin/voiture/{id}/modif', name: 'modif_voiture', methods: ['GET', 'POST'])]
     public function modification(Voiture $voiture = null, Request $request, EntityManagerInterface $em)    
     {
         if(!$voiture){
@@ -59,7 +59,7 @@ class AdminVoituresController extends AbstractController
 
     }
 
-    #[Route('/admin/supp/{id}', name: 'supVoiture')]
+    #[Route('/admin/{id}/supp', name: 'sup_voiture')]
     public function supprimer(Voiture $voiture, Request $request, EntityManagerInterface $em)
     {
     
@@ -69,6 +69,6 @@ class AdminVoituresController extends AbstractController
             $this->addFlash('success', "La suppression a été effectué");
             return $this->redirectToRoute("admin_dashboard");
         }
-    }
+    } 
 
 }

@@ -15,7 +15,6 @@ class UploadController extends AbstractController
     public function generatePDF(Location $location, PdfService $pdfService): Response
     {
 
-
         // $arrContextOptions=array(
         //     "ssl"=>array(
         //         "verify_peer"=>false,
